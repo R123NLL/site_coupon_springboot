@@ -19,7 +19,10 @@ public class Customer {
     private String email;
     @Column(name = "customer_password",nullable = false,length = 40)
     private String password;
-    @OneToMany
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "customer_vs_coupons",
+            joinColumns = @JoinColumn(name = "customer_id"),
+            inverseJoinColumns = @JoinColumn(name = "coupon_id"))
     private ArrayList<Coupon> coupons;
 
     public Customer() {
