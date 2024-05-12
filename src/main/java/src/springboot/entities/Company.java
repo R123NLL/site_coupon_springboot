@@ -5,19 +5,20 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.Objects;
 @Entity
-@Table(name = "company")
+@Table(name = "companies")
 public class Company {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "company_id")
     private int id;
-    @Column(name = "company_name",nullable = false,length = 40)
+    @Column(name = "company_name",nullable = false,unique = true,length = 40)
     private String name;
-    @Column(name = "company_email",nullable = false,length = 40)
+    @Column(name = "company_email",nullable = false,unique = true,length = 40)
     private String email;
     @Column(name = "company_password",nullable = false,length = 40)
     private String password;
-    @OneToMany
+    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL)
     private ArrayList<Coupon> coupons;
 
     public Company() {
@@ -71,17 +72,6 @@ public class Company {
     }
 
     @Override
-    public String toString() {
-        return "Company{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", coupons=" + coupons +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -92,5 +82,16 @@ public class Company {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, email, password, coupons);
+    }
+
+    @Override
+    public String toString() {
+        return "Company{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", coupons=" + coupons +
+                '}';
     }
 }

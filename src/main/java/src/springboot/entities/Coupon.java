@@ -10,7 +10,9 @@ public class Coupon {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "coupon_id")
     private int id;
-    private int companyID;
+    @ManyToOne(targetEntity = Company.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
+    private Company company;
     @Enumerated(EnumType.STRING)
     private Category category;
     @Column(name = "title",nullable = false,length = 40)
@@ -34,8 +36,8 @@ public class Coupon {
     public Coupon() {
     }
 
-    public Coupon(int companyID, Category category, String title, String description, LocalDate startDate, LocalDate endDate, int amount, double price, String image) {
-        this.companyID = companyID;
+    public Coupon(Company company, Category category, String title, String description, LocalDate startDate, LocalDate endDate, int amount, double price, String image) {
+        this.company = company;
         this.category = category;
         this.title = title;
         this.description = description;
@@ -54,12 +56,12 @@ public class Coupon {
         this.id = id;
     }
 
-    public int getCompanyID() {
-        return companyID;
+    public Company getCompany() {
+        return company;
     }
 
-    public void setCompanyID(int companyID) {
-        this.companyID = companyID;
+    public void setCompany(Company company) {
+        this.company = company;
     }
 
     public Category getCategory() {
@@ -134,7 +136,7 @@ public class Coupon {
     public String toString() {
         return "Coupon{" +
                 "id=" + id +
-                ", companyID=" + companyID +
+                ", company=" + company +
                 ", category=" + category +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
