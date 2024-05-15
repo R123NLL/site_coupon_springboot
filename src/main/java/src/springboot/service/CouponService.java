@@ -7,5 +7,6 @@ import java.util.ArrayList;
 
 public interface CouponService {
     ArrayList<Coupon> getAllCoupons();
+
     void addCoupon();
 }

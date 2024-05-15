@@ -7,5 +7,6 @@ import java.util.ArrayList;
 
 public interface CustomerService {
     ArrayList<Customer> getAllCustomers();
+
     void addCustomer();
 }

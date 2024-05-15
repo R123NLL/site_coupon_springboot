@@ -6,5 +6,6 @@ import java.util.ArrayList;
 
 public interface CompanyService {
     ArrayList<Company> getAllCompanies();
+
     void addCompany();
 }
