@@ -1,12 +1,14 @@
 package src.springboot.service;
 
-import src.springboot.entities.Company;
+
+import src.springboot.dto.NewCustomerRequest;
 import src.springboot.entities.Customer;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface CustomerService {
-    ArrayList<Customer> getAllCustomers();
+    List<Customer> getAllCustomers();
 
-    void addCustomer();
+    void addCustomer(NewCustomerRequest newCustomerRequest);
 }
