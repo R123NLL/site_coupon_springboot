@@ -1,14 +1,20 @@
 package src.springboot.service;
 
 
-import src.springboot.dto.NewCustomerRequest;
+import src.springboot.entities.Category;
+import src.springboot.entities.Coupon;
 import src.springboot.entities.Customer;
+import src.springboot.exceptions.UnAuthorizedException;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public interface CustomerService {
-    List<Customer> getAllCustomers();
+    void purchaseCoupon(Coupon coupon) throws UnAuthorizedException;
 
-    void addCustomer(NewCustomerRequest newCustomerRequest);
+    ArrayList<Coupon> getCustomerCoupons() throws UnAuthorizedException;
+    ArrayList<Coupon> getCustomerCoupons(Category category) throws UnAuthorizedException;
+
+    ArrayList<Coupon> getCustomerCoupons(double maxPrice) throws UnAuthorizedException;
+
+    Customer getCustomerDetails() throws UnAuthorizedException;
 }

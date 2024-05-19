@@ -30,9 +30,6 @@ public class Coupon {
     @Column(name = "image",nullable = false,length = 40)
     private String image;
 
-    // We also have constructor by default,
-    // but we required to create constructor.
-    // We will pass arguments to it if it will be required in the future.
     public Coupon() {
     }
 
