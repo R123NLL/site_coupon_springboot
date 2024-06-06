@@ -14,7 +14,7 @@ import src.springboot.service.CustomerService;
 
 
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.List;
 
 import static java.util.Objects.nonNull;
 
@@ -24,11 +24,10 @@ public class CustomerServiceImpl extends ClientService implements CustomerServic
 
     @Autowired
     private CustomerRepository customerRepository;
-    private final int customerID;
 
-    public CustomerServiceImpl(CompanyRepository companyRepository, CustomerRepository customerRepository, CouponRepository couponRepository, int customerID) {
+
+    public CustomerServiceImpl(CompanyRepository companyRepository, CustomerRepository customerRepository, CouponRepository couponRepository) {
         super(companyRepository, customerRepository, couponRepository);
-        this.customerID = customerID;
     }
 
     @Override
@@ -37,42 +36,36 @@ public class CustomerServiceImpl extends ClientService implements CustomerServic
     }
 
     @Override
-    public void purchaseCoupon(Coupon coupon) throws UnAuthorizedException {
-        notLoggedIn();
+    public void purchaseCoupon(int customerID, Coupon coupon) throws UnAuthorizedException {
+
         if (nonNull(coupon)) {
             couponRepository.addCouponPurchase(customerID, coupon.getId());
         }
     }
 
     @Override
-    public ArrayList<Coupon> getCustomerCoupons(int customerID) throws UnAuthorizedException {
-        notLoggedIn();
+    public List<Coupon> getCustomerCoupons(int customerID) throws UnAuthorizedException {
+
         return customerRepository.getById(customerID).getCoupons();
     }
 
     @Override
-    public ArrayList<Coupon> getCustomerCoupons(Category category) throws UnAuthorizedException {
-        notLoggedIn();
+    public List<Coupon> getCustomerCoupons(int customerID, Category category) throws UnAuthorizedException {
+
         return couponRepository.getAllCustomerCoupons(customerID, category);
     }
 
     @Override
-    public ArrayList<Coupon> getCustomerCoupons(double maxPrice) throws UnAuthorizedException {
-        notLoggedIn();
+    public List<Coupon> getCustomerCoupons(int customerID, double maxPrice) throws UnAuthorizedException {
+
         return couponRepository.getCustomerCouponsBelowPrice(customerID, maxPrice);
     }
 
     @Override
-    public Customer getCustomerDetails() throws UnAuthorizedException {
-        notLoggedIn();
+    public Customer getCustomerDetails(int customerID) throws UnAuthorizedException {
+
         return customerRepository.getOneCustomer(customerID);
     }
 
-    private void notLoggedIn() throws UnAuthorizedException {
-        notLoggedIn();
-        if (customerID <= 0) {
-            throw new UnAuthorizedException("Access denied, please log in first!");
-        }
-    }
 
 }

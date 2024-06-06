@@ -1,6 +1,7 @@
 package src.springboot.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import src.springboot.dao.CompanyRepository;
 import src.springboot.dao.CouponRepository;
@@ -13,18 +14,23 @@ import src.springboot.service.ClientService;
 import src.springboot.service.CompanyService;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class CompanyServiceImpl extends ClientService implements CompanyService {
-    private final int companyId;
 
     @Autowired
     private CompanyRepository companyRepository;
 
-    public CompanyServiceImpl(CompanyRepository companyRepository, CustomerRepository customerRepository, CouponRepository couponRepository, int companyId) {
+    @Autowired
+    private CustomerRepository customerRepository;
+
+    @Autowired
+    private CouponRepository couponRepository;
+
+    public CompanyServiceImpl(CompanyRepository companyRepository, CustomerRepository customerRepository, CouponRepository couponRepository) {
         super(companyRepository, customerRepository, couponRepository);
-        this.companyId = companyId;
+
     }
 
     @Override
@@ -33,11 +39,11 @@ public class CompanyServiceImpl extends ClientService implements CompanyService 
     }
 
     @Override
-    public void addCoupon(Coupon coupon) throws UnAuthorizedException {
-        notLoggedIn();
+    public void addCoupon(Coupon coupon, int companyId) throws UnAuthorizedException {
+
         coupon.setCompanyID(companyId);
         if (!couponRepository.isCouponExist(coupon)) {
-            couponRepository.addCoupon(coupon);
+            couponRepository.save(coupon);
         } else {
             System.out.println("Coupon already with title " + coupon.getTitle() + " for companyId:" + companyId + " exist");
         }
@@ -45,45 +51,41 @@ public class CompanyServiceImpl extends ClientService implements CompanyService 
 
     @Override
     public void updateCoupon(Coupon coupon) throws UnAuthorizedException {
-        notLoggedIn();
-        couponRepository.updateCoupon(coupon);
+
+        couponRepository.save(coupon);
 
     }
 
     @Override
     public void deleteCoupon(int couponId) throws UnAuthorizedException {
-        notLoggedIn();
+
         couponRepository.deleteCoupon(couponId);
 
     }
 
     @Override
-    public ArrayList<Coupon> getCompanyCoupons() throws UnAuthorizedException {
-        notLoggedIn();
+    public List<Coupon> getCompanyCoupons(int companyId) throws UnAuthorizedException {
+
         return couponRepository.getAllCompanyCoupons(companyId);
     }
 
     @Override
-    public ArrayList<Coupon> getCompanyCoupons(Category category) throws UnAuthorizedException {
-        notLoggedIn();
+    public List<Coupon> getCompanyCoupons(int companyId, Category category) throws UnAuthorizedException {
+
         return couponRepository.getAllCompanyCoupons(companyId, category);
     }
 
     @Override
-    public ArrayList<Coupon> getCompanyCoupons(double maxPrice) throws UnAuthorizedException {
-        notLoggedIn();
+    public List<Coupon> getCompanyCoupons(int companyId, double maxPrice) throws UnAuthorizedException {
+
         return couponRepository.getCompanyCouponsBelowPrice(companyId, maxPrice);
     }
 
     @Override
-    public Company getCompanyDetails() throws UnAuthorizedException {
-        notLoggedIn();
+    public Company getCompanyDetails(int companyId) throws UnAuthorizedException {
+
         return companyRepository.getOneCompany(companyId);
     }
 
-    private void notLoggedIn() throws UnAuthorizedException {
-        if (this.companyId <= 0) {
-            throw new UnAuthorizedException("Access denied, please log in!");
-        }
-    }
+
 }

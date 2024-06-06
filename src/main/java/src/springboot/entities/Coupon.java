@@ -3,6 +3,7 @@ package src.springboot.entities;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "coupon")
@@ -30,6 +31,10 @@ public class Coupon {
     private double price;
     @Column(name = "image", nullable = false, length = 40)
     private String image;
+
+    @ManyToMany(mappedBy = "coupons")
+    private List<Customer> customers;
+
 
     public Coupon() {
     }

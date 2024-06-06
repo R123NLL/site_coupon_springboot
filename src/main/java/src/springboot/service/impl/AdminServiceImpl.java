@@ -12,6 +12,7 @@ import src.springboot.service.ClientService;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.List;
 
 @Service
 public class AdminServiceImpl extends ClientService implements AdminService {
@@ -55,7 +56,7 @@ public class AdminServiceImpl extends ClientService implements AdminService {
 
     @Override
     public void updateCompany(Company company) {
-        this.companyRepository.updateCompany(company);
+        this.companyRepository.save(company);
     }
 
 
@@ -90,7 +91,7 @@ public class AdminServiceImpl extends ClientService implements AdminService {
     public void addCustomer(Customer customer) throws UnAuthorizedException {
         notLoggedIn();
         if (!this.customerRepository.isCustomerExists(customer.getEmail())) {
-            this.customerRepository.addCustomer(customer);
+            this.customerRepository.save(customer);
         } else {
             System.out.println("Customer with " + customer.getEmail() + " already exists");
         }
@@ -99,7 +100,7 @@ public class AdminServiceImpl extends ClientService implements AdminService {
     @Override
     public void updateCustomer(Customer customer) throws UnAuthorizedException {
         notLoggedIn();
-        this.customerRepository.updateCustomer(customer);
+        this.customerRepository.save(customer);
     }
 
     @Override

@@ -6,14 +6,15 @@ import src.springboot.entities.Coupon;
 import src.springboot.exceptions.UnAuthorizedException;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface CompanyService {
-    void addCoupon(Coupon coupon) throws UnAuthorizedException;
+    void addCoupon(Coupon coupon, int companyID) throws UnAuthorizedException;
     void updateCoupon(Coupon coupon) throws UnAuthorizedException;
     void deleteCoupon(int couponId) throws UnAuthorizedException;
-    ArrayList<Coupon> getCompanyCoupons() throws UnAuthorizedException;
-    ArrayList<Coupon> getCompanyCoupons(Category category) throws UnAuthorizedException;
-    ArrayList<Coupon> getCompanyCoupons(double maxPrice) throws UnAuthorizedException;
-    Company getCompanyDetails() throws UnAuthorizedException;
+    List<Coupon> getCompanyCoupons(int companyId) throws UnAuthorizedException;
+    List<Coupon> getCompanyCoupons(int companyId,Category category) throws UnAuthorizedException;
+    List<Coupon> getCompanyCoupons(int companyID,double maxPrice) throws UnAuthorizedException;
+    Company getCompanyDetails(int companyID) throws UnAuthorizedException;
 
 }

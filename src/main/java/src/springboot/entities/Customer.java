@@ -3,6 +3,7 @@ package src.springboot.entities;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 @Entity
 @Table(name = "customer")
@@ -23,7 +24,7 @@ public class Customer {
     @JoinTable(name = "customer_vs_coupons",
             joinColumns = @JoinColumn(name = "customer_id"),
             inverseJoinColumns = @JoinColumn(name = "coupon_id"))
-    private ArrayList<Coupon> coupons;
+    private List<Coupon> coupons;
 
     public Customer() {
     }
@@ -76,7 +77,7 @@ public class Customer {
         this.password = password;
     }
 
-    public ArrayList<Coupon> getCoupons() {
+    public List<Coupon> getCoupons() {
         return coupons;
     }
 
