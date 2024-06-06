@@ -1,45 +1,27 @@
-package src.springboot.entities;
+package src.springboot.dto;
 
-import jakarta.persistence.*;
+
+import src.springboot.entities.Category;
+import src.springboot.entities.Company;
 
 import java.time.LocalDate;
-import java.util.List;
 
-@Entity
-@Table(name = "coupon")
-public class Coupon {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "coupon_id")
-    private int id;
-    @ManyToOne(targetEntity = Company.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id")
+public class NewCouponRequest {
     private Company company;
-    @Enumerated(EnumType.STRING)
     private Category category;
-    @Column(name = "title", nullable = false, length = 40)
     private String title;
-    @Column(name = "description", nullable = false, length = 40)
     private String description;
-    @Column(name = "start_date", nullable = false, length = 40)
     private LocalDate startDate;
-    @Column(name = "end_date", nullable = false, length = 40)
     private LocalDate endDate;
-    @Column(name = "amount", nullable = false, length = 40)
     private int amount;
-    @Column(name = "price", nullable = false, length = 40)
     private double price;
-    @Column(name = "image", nullable = false, length = 40)
     private String image;
 
-    @ManyToMany(mappedBy = "coupons")
-    private List<Customer> customers;
+    public NewCouponRequest() {
 
-
-    public Coupon() {
     }
 
-    public Coupon(Company company, Category category, String title, String description, LocalDate startDate, LocalDate endDate, int amount, double price, String image) {
+    public NewCouponRequest(Company company, Category category, String title, String description, LocalDate startDate, LocalDate endDate, int amount, double price, String image) {
         this.company = company;
         this.category = category;
         this.title = title;
@@ -51,14 +33,6 @@ public class Coupon {
         this.image = image;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public Company getCompany() {
         return company;
     }
@@ -67,15 +41,8 @@ public class Coupon {
         this.company = company;
     }
 
-    public void setCompanyID(int companyId) {
-    }
-
     public Category getCategory() {
         return category;
-    }
-
-    public int getCategoryId() {
-        return category.ordinal() + 1;
     }
 
     public void setCategory(Category category) {
@@ -140,9 +107,8 @@ public class Coupon {
 
     @Override
     public String toString() {
-        return "Coupon{" +
-                "id=" + id +
-                ", company=" + company +
+        return "NewCouponRequest{" +
+                "company=" + company +
                 ", category=" + category +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
