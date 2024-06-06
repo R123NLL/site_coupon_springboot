@@ -3,6 +3,7 @@ package src.springboot.entities;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+
 @Entity
 @Table(name = "coupon")
 public class Coupon {
@@ -15,19 +16,19 @@ public class Coupon {
     private Company company;
     @Enumerated(EnumType.STRING)
     private Category category;
-    @Column(name = "title",nullable = false,length = 40)
+    @Column(name = "title", nullable = false, length = 40)
     private String title;
-    @Column(name = "description",nullable = false,length = 40)
+    @Column(name = "description", nullable = false, length = 40)
     private String description;
-    @Column(name = "start_date",nullable = false,length = 40)
+    @Column(name = "start_date", nullable = false, length = 40)
     private LocalDate startDate;
-    @Column(name = "end_date",nullable = false,length = 40)
+    @Column(name = "end_date", nullable = false, length = 40)
     private LocalDate endDate;
-    @Column(name = "amount",nullable = false,length = 40)
+    @Column(name = "amount", nullable = false, length = 40)
     private int amount;
-    @Column(name = "price",nullable = false,length = 40)
+    @Column(name = "price", nullable = false, length = 40)
     private double price;
-    @Column(name = "image",nullable = false,length = 40)
+    @Column(name = "image", nullable = false, length = 40)
     private String image;
 
     public Coupon() {
@@ -61,12 +62,15 @@ public class Coupon {
         this.company = company;
     }
 
+    public void setCompanyID(int companyId) {
+    }
+
     public Category getCategory() {
         return category;
     }
 
     public int getCategoryId() {
-        return category.ordinal()+1;
+        return category.ordinal() + 1;
     }
 
     public void setCategory(Category category) {

@@ -9,11 +9,11 @@ import java.sql.SQLException;
 
 @Service
 public abstract class ClientService {
-    //    @Autowired
+
     protected final CompanyRepository companyRepository;
-    //    @Autowired
+
     protected final CustomerRepository customerRepository;
-    //    @Autowired
+
     protected final CouponRepository couponRepository;
 
     public ClientService(CompanyRepository companyRepository, CustomerRepository customerRepository, CouponRepository couponRepository) {

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public interface CustomerService {
     void purchaseCoupon(Coupon coupon) throws UnAuthorizedException;
 
-    ArrayList<Coupon> getCustomerCoupons() throws UnAuthorizedException;
+    ArrayList<Coupon> getCustomerCoupons(int customerID) throws UnAuthorizedException;
     ArrayList<Coupon> getCustomerCoupons(Category category) throws UnAuthorizedException;
 
     ArrayList<Coupon> getCustomerCoupons(double maxPrice) throws UnAuthorizedException;
