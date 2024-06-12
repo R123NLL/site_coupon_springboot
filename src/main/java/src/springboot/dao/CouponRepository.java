@@ -71,4 +71,5 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
 
     @Query("SELECT c FROM Coupon c JOIN c.customers cust WHERE cust.id = :customerId AND c.price < :price")
     List<Coupon> getCustomerCouponsBelowPrice(@Param("customerId") int customerId, @Param("price") double price);
+
 }
