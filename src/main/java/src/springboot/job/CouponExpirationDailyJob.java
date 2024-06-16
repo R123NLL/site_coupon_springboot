@@ -13,7 +13,6 @@ import java.sql.Date;
 import java.time.LocalDate;
 
 
-
 @Component
 @EnableScheduling
 public class CouponExpirationDailyJob implements Runnable {
@@ -36,7 +35,7 @@ public class CouponExpirationDailyJob implements Runnable {
                 try {
                     couponRepository.delete(coupon);
                     logger.info("Deleted expired coupon: {}", coupon);
-                }catch (Exception e){
+                } catch (Exception e) {
                     logger.error("Error deleting coupon: {}", coupon, e);
                 }
             }
