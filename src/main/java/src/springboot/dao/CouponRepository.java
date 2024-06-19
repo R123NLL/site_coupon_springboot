@@ -57,7 +57,7 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
     List<Coupon> getAllCompanyCoupons(int companyID);
 
     @Query("SELECT c FROM Coupon c WHERE c.company.id = ?1 AND c.category = ?2")
-    List<Coupon> getAllCompanyCoupons(int companyID, Category category);
+    ArrayList<Coupon> getAllCompanyCoupons(int companyID, Category category);
 
     @Query("SELECT c FROM Coupon c WHERE c.company.id = ?1 AND c.price < ?2")
     List<Coupon> getCompanyCouponsBelowPrice(int companyID, double price);

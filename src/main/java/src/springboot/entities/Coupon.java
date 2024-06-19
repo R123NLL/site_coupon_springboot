@@ -151,6 +151,6 @@ public class Coupon {
                 ", amount=" + amount +
                 ", price=" + price +
                 ", image='" + image + '\'' +
-                '}';
+                "}\n";
     }
 }

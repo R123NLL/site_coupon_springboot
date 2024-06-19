@@ -12,6 +12,7 @@ import src.springboot.service.impl.CompanyServiceImpl;
 import src.springboot.service.impl.CustomerServiceImpl;
 
 import java.util.Objects;
+
 @Service
 public class LoginManager {
 

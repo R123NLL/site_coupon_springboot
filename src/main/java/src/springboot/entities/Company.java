@@ -3,7 +3,9 @@ package src.springboot.entities;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+
 @Entity
 @Table(name = "companies")
 public class Company {
@@ -11,20 +13,20 @@ public class Company {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "company_id")
     private int id;
-    @Column(name = "company_name",nullable = false,unique = true,length = 40)
+    @Column(name = "company_name", nullable = false, unique = true, length = 40)
     private String name;
-    @Column(name = "company_email",nullable = false,unique = true,length = 40)
+    @Column(name = "company_email", nullable = false, unique = true, length = 40)
     private String email;
-    @Column(name = "company_password",nullable = false,length = 40)
+    @Column(name = "company_password", nullable = false, length = 40)
     private String password;
     @OneToMany(mappedBy = "company", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
-    private ArrayList<Coupon> coupons;
+    private List<Coupon> coupons;
 
     public Company() {
     }
 
-    public Company(String name, String email, String password, ArrayList<Coupon> coupons) {
+    public Company(String name, String email, String password, List<Coupon> coupons) {
         this.name = name;
         this.email = email;
         this.password = password;
@@ -63,7 +65,7 @@ public class Company {
         this.password = password;
     }
 
-    public ArrayList<Coupon> getCoupons() {
+    public List<Coupon> getCoupons() {
         return coupons;
     }
 
@@ -92,6 +94,6 @@ public class Company {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", coupons=" + coupons +
-                '}';
+                "}\n";
     }
 }
