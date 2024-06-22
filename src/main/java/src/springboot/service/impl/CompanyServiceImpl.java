@@ -35,7 +35,7 @@ public class CompanyServiceImpl extends ClientService implements CompanyService 
 
     @Override
     public boolean login(String email, String password) throws SQLException, InterruptedException {
-        return couponRepository.existsCompanyByEmailAndPassword(email, password);
+        return companyRepository.isCompanyExists(email,password);
     }
 
     @Override
@@ -56,10 +56,10 @@ public class CompanyServiceImpl extends ClientService implements CompanyService 
 
     }
 
-    @Override
-    public void deleteCoupon(int couponId) throws UnAuthorizedException {
 
-        couponRepository.deleteCoupon(couponId);
+    public void deleteCoupon(Long couponId) throws UnAuthorizedException {
+
+        couponRepository.deleteById(couponId);
 
     }
 

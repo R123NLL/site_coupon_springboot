@@ -54,46 +54,147 @@ public class Test {
     }
 
     public void showcase() {
+        logger.info("");
+        logger.info("");
         logger.info("Starting Tests");
-
-        logger.info("******************* Creating Coupons coupons1-coupons5 *******************");
-        createAndSave5Coupons();
-        logger.info("******************* Creating Customers customer1-customer5 *******************");
-        createAndSave5Customers();
+        logger.info("");
+        logger.info("");
+        deleteAll();
+        couponTester();
+        customerTester();
         companyTester();
+    }
 
+    private void couponTester() {
+        logger.info("******************* Coupon Tester *******************");
+
+        // creating 5 coupons
+        logger.info("------ Creating Coupons coupons1-coupons5 ------");
+        createAndSave5Coupons();
+
+        //show all coupons
+        logger.info("All the coupons before testing:\n " + couponRepository.findAllCoupons());
+
+        //isExists
+        logger.info("Coupon Testing: is coupon exists? (coleman Water Bottle -true) " +
+                couponRepository.existsCouponByTitle("Water Bottle"));
+        logger.info("Coupon Testing: is coupon exists? (Barbie Doll-false) " +
+                couponRepository.existsCouponByTitle("Barbie Doll"));
+
+        //deleting and checking
+        logger.info("------ Coupon Testing: deleting non existing coupon ------");
+        logger.info(("is coupon with id 10 exists?: " + couponRepository.existsById(10L)));
+        logger.info("Deleting coupon with id 10");
+        couponRepository.deleteById(10L);
+        logger.info("Coupon Testing: checking if coupon is deleted: ");
+        logger.info("" + couponRepository.getOneCoupon(10));
+
+        logger.info("------ Coupon Testing: deleting existing coupon ------");
+        logger.info(("is coupon with id 5 exists?:" + couponRepository.existsById(5L)));
+        logger.info("Deleting coupon with id 5");
+        couponRepository.deleteById(5L);
+        logger.info("Customer Testing: checking if coupon is deleted");
+        logger.info("" + couponRepository.getOneCoupon(5));
+
+        //adding and checking
+        logger.info("Coupon Testing: adding new Coupon (Freezer) ");
+        Coupon coupon6 = new Coupon();
+        coupon6.setCompanyID(1);
+        coupon6.setCompany(companyRepository.getOneCompany(1));
+        coupon6.setCategory(Category.getCategoryNameById(4));
+        coupon6.setTitle("Outdoor Freezer");
+        coupon6.setDescription("Freezer for outdoor vacations");
+        coupon6.setStartDate(LocalDate.of(2023, 12, 1));
+        coupon6.setEndDate(LocalDate.of(2024, 7, 1));
+        coupon6.setAmount(50);
+        coupon6.setPrice(200);
+        coupon6.setImage("D://Images/coupon6");
+        couponRepository.save(coupon6);
+        logger.info("" + couponRepository.getOneCoupon(6));
+
+        //show all coupons
+        logger.info("All the Coupons after testing: \n " + couponRepository.findAllCoupons());
     }
 
     private void companyTester() {
-        logger.info("******************* Creating Companies c1-c5 *******************");
+        logger.info("******************* Company Tester *******************");
+
+        // creating 5 companies
+        logger.info("------ Creating Companies c1-c5 ------");
         createAndSave5Companies();
 
         //show all companies
-        logger.info("All the companies before testing\n " + companyRepository.getAllCompanies());
+        logger.info("All the companies before testing: \n " + companyRepository.getAllCompanies());
 
         //isExists
-        logger.info("Company Testing: is company exists?(coleman-true) " +
+        logger.info("Company Testing: is company exists? (coleman-true) " +
                 companyRepository.isCompanyExists("office@Coleman.com", "12345"));
-        logger.info("Company Testing: is company exists?(google-false) " +
+        logger.info("Company Testing: is company exists? (google-false) " +
                 companyRepository.isCompanyExists("office@google.com", "12345"));
 
         //deleting and checking
-        logger.info("Company Testing: deleting non existing company");
+        logger.info("------ Company Testing: deleting non existing company ------");
+        logger.info(("is company with id 10 exists? " + companyRepository.existsById(10L)));
+        logger.info("Deleting company with id 10");
         companyRepository.deleteCompany(10);
         logger.info("Company Testing: checking if company is deleted");
         logger.info("" + companyRepository.getOneCompany(10));
-        logger.info("Company Testing: deleting existing company");
+
+        logger.info("------ Company Testing: deleting existing company ------");
+        logger.info(("is company with id 5 exists? " + companyRepository.existsById(5L)));
+        logger.info("Deleting company with id 5");
         companyRepository.deleteCompany(5);
         logger.info("Company Testing: checking if company is deleted");
         logger.info("" + companyRepository.getOneCompany(5));
 
         //adding and checking
-        logger.info("Company Testing: adding new company(El-AL) ");
+        logger.info("Company Testing: adding new company (El-AL) ");
         companyRepository.addCompany(new Company("El-Al", "office@elal.co.il", "0123456", null));
         logger.info("" + companyRepository.getOneCompanyByEmail("office@elal.co.il"));
 
         //show all companies
-        logger.info("All the companies after testing\n " + companyRepository.getAllCompanies());
+        logger.info("All the companies after testing: \n " + companyRepository.getAllCompanies());
+
+        logger.info("show the ");
+        companyService.
+    }
+
+    private void customerTester() {
+        logger.info("******************* Customer Tester *******************");
+        logger.info("------ Creating Customers customer1-customer5 ------");
+        createAndSave5Customers();
+
+        //show all customers
+        logger.info("All the customers before testing: \n " + customerRepository.getAllCustomers());
+
+        //isExists
+        logger.info("Customer Testing: is customer exists? (David-true) " +
+                customerRepository.isCustomerExists("DavidL@gmail.com"));
+        logger.info("Customer Testing: is customer exists? (Ronen-false) " +
+                customerRepository.isCustomerExists("RonenN@gmail.com"));
+        //deleting and checking
+        logger.info("------ Customer Testing: deleting non existing customer ------");
+        logger.info(("is customer with id 10 exists? " + customerRepository.existsById(10L)));
+        logger.info("Deleting customer with id 10");
+        customerRepository.deleteCustomer(10);
+        logger.info("Customer Testing: checking if customer is deleted");
+        logger.info("" + customerRepository.getOneCustomer(10));
+
+        logger.info("------ Customer Testing: deleting existing customer ------");
+        logger.info(("is customer with id 5 exists? " + customerRepository.existsById(5L)));
+        logger.info("Deleting customer with id 5");
+        customerRepository.deleteCustomer(5);
+        logger.info("Customer Testing: checking if company is deleted");
+        logger.info("" + customerRepository.getOneCustomer(5));
+
+
+        //adding and checking
+        logger.info("Customer Testing: adding new customer (Roy) ");
+        customerRepository.save(new Customer("Roy", "Yaakov", "RoyY@gmail.com", "123456", null));
+        logger.info("" + customerRepository.getOneCustomerByEmail("RoyY@gmail.com"));
+
+        //show all companies
+        logger.info("All the customers after testing: \n " + customerRepository.getAllCustomers());
     }
 
     private void createAndSave5Companies() {
@@ -159,7 +260,7 @@ public class Test {
         customerRepository.saveAll(Arrays.asList(customer1, customer2, customer3, customer4, customer5));
     }
 
-    public void createAndSave5Coupons() {
+    private void createAndSave5Coupons() {
         Coupon coupon1 = new Coupon();
         coupon1.setCompanyID(1);
         coupon1.setCompany(companyRepository.getOneCompany(1));
@@ -220,5 +321,11 @@ public class Test {
         coupon5.setPrice(60);
         coupon5.setImage("D://Images/coupon5");
         couponRepository.saveAll(List.of(coupon1, coupon2, coupon3, coupon4, coupon5));
+    }
+
+    private void deleteAll() {
+        couponRepository.deleteAll();
+        customerRepository.deleteAll();
+        companyRepository.deleteAll();
     }
 }
