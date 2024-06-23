@@ -42,10 +42,17 @@ public class CompanyServiceImpl extends ClientService implements CompanyService 
     public void addCoupon(Coupon coupon, int companyId) throws UnAuthorizedException {
 
         coupon.setCompanyID(companyId);
-        if (!couponRepository.isCouponExist(coupon)) {
-            couponRepository.save(coupon);
-        } else {
-            System.out.println("Coupon already with title " + coupon.getTitle() + " for companyId:" + companyId + " exist");
+
+        try {
+            if (!couponRepository.isCouponExist(coupon)) {
+                couponRepository.save(coupon);
+            } else {
+                System.out.println("Coupon already with title " + coupon.getTitle() + " for companyId:" + companyId + " exist");
+            }
+        } catch (Exception e) {
+            // Handle other exceptions
+            System.err.println("An error occurred while adding the coupon: " + e.getMessage());
+            // Optionally, rethrow the exception or handle it as per your requirement
         }
     }
 

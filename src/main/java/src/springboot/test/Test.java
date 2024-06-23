@@ -8,13 +8,15 @@ import org.springframework.stereotype.Service;
 import src.springboot.dao.CompanyRepository;
 import src.springboot.dao.CouponRepository;
 import src.springboot.dao.CustomerRepository;
-import src.springboot.entities.Category;
-import src.springboot.entities.Company;
-import src.springboot.entities.Coupon;
-import src.springboot.entities.Customer;
+import src.springboot.entities.*;
+import src.springboot.exceptions.LoginSecurityException;
+import src.springboot.exceptions.UnAuthorizedException;
 import src.springboot.job.CouponExpirationDailyJob;
 import src.springboot.service.CompanyService;
 import src.springboot.service.CustomerService;
+import src.springboot.service.impl.AdminServiceImpl;
+import src.springboot.service.impl.CompanyServiceImpl;
+import src.springboot.service.impl.CustomerServiceImpl;
 import src.springboot.utils.LoginManager;
 
 import java.time.LocalDate;
@@ -30,9 +32,11 @@ public class Test {
     @Autowired
     private CustomerRepository customerRepository;
     @Autowired
-    private CompanyService companyService;
+    private CompanyServiceImpl companyServiceimpl;
     @Autowired
-    private CustomerService customerService;
+    private CustomerServiceImpl customerServiceimpl;
+    @Autowired
+    private AdminServiceImpl adminServiceimpl;
     @Autowired
     private LoginManager loginManager;
     private static Test instance;
@@ -53,7 +57,7 @@ public class Test {
         instance = this;
     }
 
-    public void showcase() {
+    public void showcase() throws UnAuthorizedException, LoginSecurityException {
         logger.info("");
         logger.info("");
         logger.info("Starting Tests");
@@ -116,7 +120,7 @@ public class Test {
         logger.info("All the Coupons after testing: \n " + couponRepository.findAllCoupons());
     }
 
-    private void companyTester() {
+    private void companyTester() throws UnAuthorizedException, LoginSecurityException {
         logger.info("******************* Company Tester *******************");
 
         // creating 5 companies
@@ -152,11 +156,28 @@ public class Test {
         companyRepository.addCompany(new Company("El-Al", "office@elal.co.il", "0123456", null));
         logger.info("" + companyRepository.getOneCompanyByEmail("office@elal.co.il"));
 
+        //testing login
+        logger.info("Company Testing: login to company:");
+        loginManager.login("office@Logitech.com","54321", ClientType.Company);
+
+        //coupon testing for company
+        Coupon coupon7 = new Coupon();
+        coupon7.setCompanyID(1);
+        coupon7.setCompany(companyRepository.getOneCompany(1));
+        coupon7.setCategory(Category.getCategoryNameById(4));
+        coupon7.setTitle("Outdoor Freezer");
+        coupon7.setDescription("Freezer for outdoor vacations");
+        coupon7.setStartDate(LocalDate.of(2023, 12, 1));
+        coupon7.setEndDate(LocalDate.of(2024, 7, 1));
+        coupon7.setAmount(50);
+        coupon7.setPrice(200);
+        coupon7.setImage("D://Images/coupon6");
+        companyServiceimpl.addCoupon(coupon7,3);
+
         //show all companies
         logger.info("All the companies after testing: \n " + companyRepository.getAllCompanies());
 
-        logger.info("show the ");
-        companyService.
+
     }
 
     private void customerTester() {
