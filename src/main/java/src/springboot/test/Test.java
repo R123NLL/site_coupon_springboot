@@ -66,7 +66,7 @@ public class Test {
         deleteAll();
         couponTester();
         customerTester();
-        companyTester();
+        //todo not done yet companyTester();
     }
 
     private void couponTester() {
@@ -103,7 +103,6 @@ public class Test {
         //adding and checking
         logger.info("Coupon Testing: adding new Coupon (Freezer) ");
         Coupon coupon6 = new Coupon();
-        coupon6.setCompanyID(1);
         coupon6.setCompany(companyRepository.getOneCompany(1));
         coupon6.setCategory(Category.getCategoryNameById(4));
         coupon6.setTitle("Outdoor Freezer");
@@ -162,7 +161,6 @@ public class Test {
 
         //coupon testing for company
         Coupon coupon7 = new Coupon();
-        coupon7.setCompanyID(1);
         coupon7.setCompany(companyRepository.getOneCompany(1));
         coupon7.setCategory(Category.getCategoryNameById(4));
         coupon7.setTitle("Outdoor Freezer");
@@ -180,7 +178,7 @@ public class Test {
 
     }
 
-    private void customerTester() {
+    private void customerTester() throws LoginSecurityException, UnAuthorizedException {
         logger.info("******************* Customer Tester *******************");
         logger.info("------ Creating Customers customer1-customer5 ------");
         createAndSave5Customers();
@@ -213,6 +211,23 @@ public class Test {
         logger.info("Customer Testing: adding new customer (Roy) ");
         customerRepository.save(new Customer("Roy", "Yaakov", "RoyY@gmail.com", "123456", null));
         logger.info("" + customerRepository.getOneCustomerByEmail("RoyY@gmail.com"));
+
+        //testing login
+        logger.info("Customer Testing: login to customer:");
+        loginManager.login("DavidL@gmail.com","0123012", ClientType.Customer);
+
+        //coupon testing for customer
+        Coupon coupon7 = new Coupon();
+        coupon7.setCompany(companyRepository.getOneCompany(1));
+        coupon7.setCategory(Category.getCategoryNameById(4));
+        coupon7.setTitle("Outdoor Freezer");
+        coupon7.setDescription("Freezer for outdoor vacations");
+        coupon7.setStartDate(LocalDate.of(2023, 12, 1));
+        coupon7.setEndDate(LocalDate.of(2024, 7, 1));
+        coupon7.setAmount(50);
+        coupon7.setPrice(200);
+        coupon7.setImage("D://Images/coupon6");
+        customerServiceimpl.purchaseCoupon(1,coupon7);
 
         //show all companies
         logger.info("All the customers after testing: \n " + customerRepository.getAllCustomers());
@@ -283,7 +298,6 @@ public class Test {
 
     private void createAndSave5Coupons() {
         Coupon coupon1 = new Coupon();
-        coupon1.setCompanyID(1);
         coupon1.setCompany(companyRepository.getOneCompany(1));
         coupon1.setCategory(Category.getCategoryNameById(4));
         coupon1.setTitle("Water Bottle");
@@ -295,7 +309,6 @@ public class Test {
         coupon1.setImage("D://Images/coupon1");
 
         Coupon coupon2 = new Coupon();
-        coupon2.setCompanyID(2);
         coupon2.setCompany(companyRepository.getOneCompany(2));
         coupon2.setCategory(Category.getCategoryNameById(2));
         coupon2.setTitle("Pc monitor");
@@ -307,7 +320,6 @@ public class Test {
         coupon2.setImage("D://Images/coupon2");
 
         Coupon coupon3 = new Coupon();
-        coupon3.setCompanyID(3);
         coupon3.setCompany(companyRepository.getOneCompany(3));
         coupon3.setCategory(Category.getCategoryNameById(2));
         coupon3.setTitle("Headset");
@@ -319,7 +331,6 @@ public class Test {
         coupon3.setImage("D://Images/coupon3");
 
         Coupon coupon4 = new Coupon();
-        coupon4.setCompanyID(4);
         coupon4.setCompany(companyRepository.getOneCompany(4));
         coupon4.setCategory(Category.getCategoryNameById(1));
         coupon4.setTitle("Dictionary");
@@ -331,7 +342,6 @@ public class Test {
         coupon4.setImage("D://Images/coupon4");
 
         Coupon coupon5 = new Coupon();
-        coupon5.setCompanyID(5);
         coupon5.setCompany(companyRepository.getOneCompany(5));
         coupon5.setCategory(Category.getCategoryNameById(2));
         coupon5.setTitle("Wireless Speaker");

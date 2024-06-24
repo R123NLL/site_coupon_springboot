@@ -21,7 +21,7 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO coupon_purchase (coupon_id, customer_id) VALUES (:couponId, :customerId)", nativeQuery = true)
+    @Query(value = "INSERT INTO customer_vs_coupons (coupon_id, customer_id) VALUES (:couponId, :customerId)", nativeQuery = true)
     void addCouponPurchase(@Param("couponId") int couponId, @Param("customerId") int customerId);
 
     @Query("SELECT c FROM Coupon c")

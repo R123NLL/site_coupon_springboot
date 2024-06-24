@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "coupon")
+@Table(name = "coupons")
 public class Coupon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -67,8 +67,6 @@ public class Coupon {
         this.company = company;
     }
 
-    public void setCompanyID(int companyId) {
-    }
 
     public Category getCategory() {
         return category;
