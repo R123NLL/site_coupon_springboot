@@ -27,11 +27,6 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
     @Query("SELECT c FROM Coupon c")
     List<Coupon> findAllCoupons();
 
-    @Modifying
-    @Transactional
-    @Query("DELETE FROM Coupon c WHERE c.id = ?1")
-    void deleteCoupon(int couponID);
-
     @Query("SELECT c FROM Coupon c WHERE c.id = ?1")
     Coupon getOneCoupon(int couponID);
 

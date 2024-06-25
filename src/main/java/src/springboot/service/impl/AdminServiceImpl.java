@@ -1,14 +1,18 @@
 package src.springboot.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import src.springboot.dao.CompanyRepository;
 import src.springboot.dao.CouponRepository;
 import src.springboot.dao.CustomerRepository;
 import src.springboot.entities.Company;
+import src.springboot.entities.Coupon;
 import src.springboot.entities.Customer;
 import src.springboot.exceptions.UnAuthorizedException;
 import src.springboot.service.AdminService;
 import src.springboot.service.ClientService;
+import src.springboot.test.AdminTester;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -20,6 +24,8 @@ public class AdminServiceImpl extends ClientService implements AdminService {
 
     private static final String EMAIL = "admin@admin.com";
     private static final String PASSWORD = "admin";
+    private static final Logger logger = LoggerFactory.getLogger(AdminServiceImpl.class);
+
 
 
     public AdminServiceImpl(CompanyRepository companyRepository, CustomerRepository customerRepository, CouponRepository couponRepository) {
@@ -30,17 +36,19 @@ public class AdminServiceImpl extends ClientService implements AdminService {
     public boolean login(String email, String password) throws SQLException, InterruptedException {
         this.isLoggedIn = "admin@admin.com".equalsIgnoreCase(email) && "admin".equals(password);
         if (this.isLoggedIn) {
-            System.out.println("You are logged in");
+            logger.info("You are logged in");
         } else {
-            System.out.println("Email or password incorrect, try again");
+            logger.error("Email or password incorrect, try again");
         }
         return this.isLoggedIn;
     }
 
-    public void deleteAll() {
+    public void deleteAll() throws UnAuthorizedException {
+        notLoggedIn();
         customerRepository.deleteAll();
         companyRepository.deleteAll();
         couponRepository.deleteAll();
+        logger.info("All repositories have been deleted");
     }
 
     @Override
@@ -50,12 +58,13 @@ public class AdminServiceImpl extends ClientService implements AdminService {
         if (!this.companyRepository.isCompanyExists(company.getEmail(), company.getName())) {
             this.companyRepository.addCompany(company);
         } else {
-            System.out.println("Cannot add company that already exists");
+            logger.error("Cannot add company that already exists");
         }
     }
 
     @Override
-    public void updateCompany(Company company) {
+    public void updateCompany(Company company) throws UnAuthorizedException {
+        notLoggedIn();
         this.companyRepository.save(company);
     }
 
@@ -93,7 +102,7 @@ public class AdminServiceImpl extends ClientService implements AdminService {
         if (!this.customerRepository.isCustomerExists(customer.getEmail())) {
             this.customerRepository.save(customer);
         } else {
-            System.out.println("Customer with " + customer.getEmail() + " already exists");
+            logger.error("Customer with " + customer.getEmail() + " already exists");
         }
     }
 
@@ -114,6 +123,12 @@ public class AdminServiceImpl extends ClientService implements AdminService {
     public List<Customer> getAllCustomers() throws UnAuthorizedException {
         notLoggedIn();
         return customerRepository.getAllCustomers();
+    }
+
+    @Override
+    public List<Coupon> getAllCoupons() throws UnAuthorizedException {
+        notLoggedIn();
+        return couponRepository.findAllCoupons();
     }
 
     @Override
