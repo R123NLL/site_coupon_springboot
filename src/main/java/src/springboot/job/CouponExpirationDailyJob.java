@@ -21,6 +21,10 @@ public class CouponExpirationDailyJob implements Runnable {
     @Autowired
     private CouponRepository couponRepository;
 
+    public CouponExpirationDailyJob() {
+
+    }
+
     @Override
     @Scheduled(cron = "0 0 1 * * *") // At 01:00AM each day
     public void run() {

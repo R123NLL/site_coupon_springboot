@@ -16,21 +16,16 @@ import java.util.List;
 public interface CouponRepository extends JpaRepository<Coupon, Long> {
     List<Coupon> findAll();
 
+    @Query("SELECT CASE WHEN COUNT(c) > 0 THEN TRUE ELSE FALSE END FROM Coupon c WHERE c.title = :couponTitle")
+    boolean existsCouponByTitle(String couponTitle);
+
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO coupon_purchase (coupon_id, customer_id) VALUES (:couponId, :customerId)", nativeQuery = true)
+    @Query(value = "INSERT INTO customer_vs_coupons (coupon_id, customer_id) VALUES (:couponId, :customerId)", nativeQuery = true)
     void addCouponPurchase(@Param("couponId") int couponId, @Param("customerId") int customerId);
 
     @Query("SELECT c FROM Coupon c")
     List<Coupon> findAllCoupons();
-
-    @Query("SELECT CASE WHEN COUNT(c) > 0 THEN TRUE ELSE FALSE END FROM Company c WHERE c.email = ?1 AND c.password = ?2")
-    boolean existsCompanyByEmailAndPassword(String email, String password);
-
-    @Modifying
-    @Transactional
-    @Query("DELETE FROM Coupon c WHERE c.id = ?1")
-    void deleteCoupon(int couponID);
 
     @Query("SELECT c FROM Coupon c WHERE c.id = ?1")
     Coupon getOneCoupon(int couponID);
@@ -57,7 +52,7 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
     List<Coupon> getAllCompanyCoupons(int companyID);
 
     @Query("SELECT c FROM Coupon c WHERE c.company.id = ?1 AND c.category = ?2")
-    List<Coupon> getAllCompanyCoupons(int companyID, Category category);
+    ArrayList<Coupon> getAllCompanyCoupons(int companyID, Category category);
 
     @Query("SELECT c FROM Coupon c WHERE c.company.id = ?1 AND c.price < ?2")
     List<Coupon> getCompanyCouponsBelowPrice(int companyID, double price);

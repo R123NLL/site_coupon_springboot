@@ -11,7 +11,6 @@ import java.util.List;
 public interface CompanyService {
     void addCoupon(Coupon coupon, int companyID) throws UnAuthorizedException;
     void updateCoupon(Coupon coupon) throws UnAuthorizedException;
-    void deleteCoupon(int couponId) throws UnAuthorizedException;
     List<Coupon> getCompanyCoupons(int companyId) throws UnAuthorizedException;
     List<Coupon> getCompanyCoupons(int companyId,Category category) throws UnAuthorizedException;
     List<Coupon> getCompanyCoupons(int companyID,double maxPrice) throws UnAuthorizedException;
