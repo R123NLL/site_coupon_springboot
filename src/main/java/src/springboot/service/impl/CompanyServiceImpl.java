@@ -23,7 +23,7 @@ import java.util.List;
 import static java.util.Objects.nonNull;
 
 @Service
-public class CompanyServiceImpl extends ClientService implements CompanyService {
+public class CompanyServiceImpl extends ClientService  implements CompanyService {
 
     @Autowired
     private CompanyRepository companyRepository;

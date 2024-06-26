@@ -20,8 +20,7 @@ import java.util.List;
 
 @Service
 public class AdminServiceImpl extends ClientService implements AdminService {
-    private boolean isLoggedIn = false;
-
+    private boolean isLoggedIn;
     private static final String EMAIL = "admin@admin.com";
     private static final String PASSWORD = "admin";
     private static final Logger logger = LoggerFactory.getLogger(AdminServiceImpl.class);
@@ -34,7 +33,7 @@ public class AdminServiceImpl extends ClientService implements AdminService {
 
     @Override
     public boolean login(String email, String password) throws SQLException, InterruptedException {
-        this.isLoggedIn = "admin@admin.com".equalsIgnoreCase(email) && "admin".equals(password);
+        this.isLoggedIn = EMAIL.equalsIgnoreCase(email) && PASSWORD.equals(password);
         if (this.isLoggedIn) {
             logger.info("You are logged in");
         } else {
@@ -48,7 +47,7 @@ public class AdminServiceImpl extends ClientService implements AdminService {
         customerRepository.deleteAll();
         companyRepository.deleteAll();
         couponRepository.deleteAll();
-        logger.info("All repositories have been deleted");
+        logger.info("*All repositories have been deleted*");
     }
 
     @Override
