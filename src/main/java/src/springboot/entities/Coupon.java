@@ -4,15 +4,15 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "coupons")
 public class Coupon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "coupon_id")
-    private int id;
-    @ManyToOne(targetEntity = Company.class, fetch = FetchType.LAZY)
+    private Long id;
+    @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
     @Enumerated(EnumType.STRING)
@@ -32,10 +32,6 @@ public class Coupon {
     @Column(name = "image", nullable = false, length = 40)
     private String image;
 
-    @ManyToMany(mappedBy = "coupons")
-    private List<Customer> customers;
-
-
     public Coupon() {
     }
 
@@ -51,12 +47,8 @@ public class Coupon {
         this.image = image;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public Company getCompany() {
@@ -66,7 +58,6 @@ public class Coupon {
     public void setCompany(Company company) {
         this.company = company;
     }
-
 
     public Category getCategory() {
         return category;
@@ -137,6 +128,19 @@ public class Coupon {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Coupon coupon = (Coupon) o;
+        return amount == coupon.amount && Double.compare(price, coupon.price) == 0 && Objects.equals(id, coupon.id) && Objects.equals(company, coupon.company) && category == coupon.category && Objects.equals(title, coupon.title) && Objects.equals(description, coupon.description) && Objects.equals(startDate, coupon.startDate) && Objects.equals(endDate, coupon.endDate) && Objects.equals(image, coupon.image);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, company, category, title, description, startDate, endDate, amount, price, image);
+    }
+
+    @Override
     public String toString() {
         return "Coupon{" +
                 "id=" + id +
@@ -149,6 +153,6 @@ public class Coupon {
                 ", amount=" + amount +
                 ", price=" + price +
                 ", image='" + image + '\'' +
-                "}\n";
+                '}';
     }
 }

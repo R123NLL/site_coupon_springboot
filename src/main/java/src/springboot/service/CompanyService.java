@@ -9,11 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface CompanyService {
-    void addCoupon(Coupon coupon, int companyID) throws UnAuthorizedException;
-    void updateCoupon(Coupon coupon) throws UnAuthorizedException;
-    List<Coupon> getCompanyCoupons(int companyId) throws UnAuthorizedException;
-    List<Coupon> getCompanyCoupons(int companyId,Category category) throws UnAuthorizedException;
-    List<Coupon> getCompanyCoupons(int companyID,double maxPrice) throws UnAuthorizedException;
-    Company getCompanyDetails(int companyID) throws UnAuthorizedException;
+    List<Coupon> getAllCoupons(Long companyId);
+    Coupon addCoupon(Coupon coupon) throws UnAuthorizedException;
+    Coupon updateCoupon(Coupon coupon) throws UnAuthorizedException;
+    List<Coupon> getCompanyCoupons(Long companyId) throws UnAuthorizedException;
+    List<Coupon> getCompanyCoupons(Long companyId,Category category) throws UnAuthorizedException;
+    List<Coupon> getCompanyCoupons(Long companyID,double maxPrice) throws UnAuthorizedException;
+    Company getCompany(Long companyID) throws UnAuthorizedException;
 
 }

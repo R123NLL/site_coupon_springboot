@@ -11,19 +11,18 @@ import java.util.Objects;
 public class Company {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "company_id")
-    private int id;
+    private Long id;
     @Column(name = "company_name", nullable = false, unique = true, length = 40)
     private String name;
     @Column(name = "company_email", nullable = false, unique = true, length = 40)
     private String email;
     @Column(name = "company_password", nullable = false, length = 40)
     private String password;
-    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
     private List<Coupon> coupons;
 
     public Company() {
+
     }
 
     public Company(String name, String email, String password, List<Coupon> coupons) {
@@ -33,12 +32,8 @@ public class Company {
         this.coupons = coupons;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -78,7 +73,7 @@ public class Company {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Company company = (Company) o;
-        return id == company.id && Objects.equals(name, company.name) && Objects.equals(email, company.email) && Objects.equals(password, company.password) && Objects.equals(coupons, company.coupons);
+        return Objects.equals(id, company.id) && Objects.equals(name, company.name) && Objects.equals(email, company.email) && Objects.equals(password, company.password) && Objects.equals(coupons, company.coupons);
     }
 
     @Override
@@ -94,6 +89,6 @@ public class Company {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", coupons=" + coupons +
-                "}\n";
+                '}';
     }
 }

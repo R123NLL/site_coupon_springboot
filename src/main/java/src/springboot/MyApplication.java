@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import src.springboot.test.Test;
+//import src.springboot.test.Test;
 
 @SpringBootApplication
 public class MyApplication implements WebMvcConfigurer {
@@ -16,12 +16,12 @@ public class MyApplication implements WebMvcConfigurer {
 
     }
 
-    @Bean
-    public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
-        return args -> {
-            Test test = ctx.getBean(Test.class);
-            test.showcase();
-        };
-    }
+//    @Bean
+//    public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
+//        return args -> {
+//            Test test = ctx.getBean(Test.class);
+//            test.showcase();
+//        };
+//    }
 
 }

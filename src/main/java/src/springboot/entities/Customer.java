@@ -5,25 +5,22 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
 @Entity
 @Table(name = "customers")
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "customer_id")
-    private int id;
-    @Column(name = "first_name",nullable = false,length = 40)
+    private Long id;
+    @Column(name = "first_name", nullable = false, length = 40)
     private String firstName;
-    @Column(name = "last_name",nullable = false,length = 40)
+    @Column(name = "last_name", nullable = false, length = 40)
     private String lastName;
-    @Column(name = "customer_email",nullable = false,unique = true ,length = 40)
+    @Column(name = "customer_email", nullable = false, unique = true, length = 40)
     private String email;
-    @Column(name = "customer_password",nullable = false,length = 40)
+    @Column(name = "customer_password", nullable = false, length = 40)
     private String password;
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "customer_vs_coupons",
-            joinColumns = @JoinColumn(name = "customer_id"),
-            inverseJoinColumns = @JoinColumn(name = "coupon_id"))
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<Coupon> coupons;
 
     public Customer() {
@@ -37,12 +34,8 @@ public class Customer {
         this.coupons = coupons;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getFirstName() {
@@ -86,6 +79,19 @@ public class Customer {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Customer customer = (Customer) o;
+        return Objects.equals(id, customer.id) && Objects.equals(firstName, customer.firstName) && Objects.equals(lastName, customer.lastName) && Objects.equals(email, customer.email) && Objects.equals(password, customer.password) && Objects.equals(coupons, customer.coupons);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName, email, password, coupons);
+    }
+
+    @Override
     public String toString() {
         return "Customer{" +
                 "id=" + id +
@@ -94,19 +100,6 @@ public class Customer {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", coupons=" + coupons +
-                "}\n";
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Customer customer = (Customer) o;
-        return id == customer.id && Objects.equals(firstName, customer.firstName) && Objects.equals(lastName, customer.lastName) && Objects.equals(email, customer.email) && Objects.equals(password, customer.password) && Objects.equals(coupons, customer.coupons);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, firstName, lastName, email, password, coupons);
+                '}';
     }
 }
