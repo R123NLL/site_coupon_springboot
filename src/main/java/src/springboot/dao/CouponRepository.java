@@ -11,10 +11,16 @@ import java.util.List;
 
 @Repository
 public interface CouponRepository extends JpaRepository<Coupon, Long> {
+
     boolean existsByTitle(String couponTitle);
-    void addCouponPurchase(Long couponId, Long customerId);
-    void deleteCouponPurchasesByCompanyId(Long companyId);
-    void detachAllCouponFromCustomer(Long customerId);
+
+    boolean existsByTitleAndCompanyId(String title, Long companyId);
 
     List<Coupon> findByCompanyId(Long companyId);
+
+    List<Coupon> findByCompanyIdAndCategory(Long companyId, Category category);
+
+    List<Coupon> findByCompanyIdAndPriceLessThanEqual(Long companyId, double maxPrice);
+
+
 }
