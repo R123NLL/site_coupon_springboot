@@ -58,11 +58,6 @@ public class CompanyServiceImpl extends ClientService implements CompanyService 
     }
 
     @Override
-    public List<Coupon> getAllCoupons(Long companyId) {
-        return couponRepository.findByCompanyId(companyId);
-    }
-
-    @Override
     public Coupon addCoupon(Coupon coupon) throws UnAuthorizedException {
         notLoggedIn();
 
@@ -109,7 +104,6 @@ public class CompanyServiceImpl extends ClientService implements CompanyService 
         return couponRepository.save(existingCoupon);
     }
 
-
     public void deleteCoupon(Long couponId) throws UnAuthorizedException {
         notLoggedIn();
 
@@ -118,6 +112,11 @@ public class CompanyServiceImpl extends ClientService implements CompanyService 
         }
 
         couponRepository.deleteById(couponId);
+    }
+
+    @Override
+    public List<Coupon> getCompanyCoupons(Long companyId) {
+        return couponRepository.findByCompanyId(companyId);
     }
 
     @Override
@@ -145,7 +144,7 @@ public class CompanyServiceImpl extends ClientService implements CompanyService 
     }
 
     @Override
-    public Company getCompany(Long companyID) throws UnAuthorizedException {
+    public Company getCompanyDetails(Long companyID) throws UnAuthorizedException {
         return companyRepository.findById(companyID)
                 .orElseThrow(() -> new EntityNotFoundException("Company not found"));
     }

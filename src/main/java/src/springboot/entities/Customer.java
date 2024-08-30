@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "customers")
@@ -20,13 +21,19 @@ public class Customer {
     private String email;
     @Column(name = "customer_password", nullable = false, length = 40)
     private String password;
-    @ManyToMany(cascade = CascadeType.ALL)
-    private List<Coupon> coupons;
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "customers_vs_coupons",
+            joinColumns = @JoinColumn(name = "customer_id"),
+            inverseJoinColumns = @JoinColumn(name = "coupon_id")
+    )
+    private Set<Coupon> coupons;
+
 
     public Customer() {
     }
 
-    public Customer(String firstName, String lastName, String email, String password, ArrayList<Coupon> coupons) {
+    public Customer(String firstName, String lastName, String email, String password, Set<Coupon> coupons) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -70,11 +77,11 @@ public class Customer {
         this.password = password;
     }
 
-    public List<Coupon> getCoupons() {
+    public Set<Coupon> getCoupons() {
         return coupons;
     }
 
-    public void setCoupons(ArrayList<Coupon> coupons) {
+    public void setCoupons(Set<Coupon> coupons) {
         this.coupons = coupons;
     }
 

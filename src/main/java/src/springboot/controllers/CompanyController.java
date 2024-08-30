@@ -18,21 +18,21 @@ public class CompanyController {
     private CompanyService companyService;
 
     @GetMapping("/{companyId}/coupons")
-    public List<Coupon> getAllCoupons(@PathVariable Long companyId) {
-        return companyService.getAllCoupons(companyId);
+    public List<Coupon> getCompanyCoupons(@PathVariable Long companyId) {
+        return companyService.getCompanyCoupons(companyId);
     }
 
     @PostMapping("/{companyId}/coupons")
     public Coupon addCoupon(@PathVariable Long companyId, @RequestBody NewCouponRequest newCouponRequest) throws UnAuthorizedException {
         Coupon coupon = Mapper.mapToCoupon(newCouponRequest);
-        coupon.setCompany(companyService.getCompany(companyId));
+        coupon.setCompany(companyService.getCompanyDetails(companyId));
         return companyService.addCoupon(coupon);
     }
 
     @PutMapping("/{companyId}/coupons")
     public Coupon updateCoupon(@PathVariable Long companyId, @RequestBody NewCouponRequest newCouponRequest) throws UnAuthorizedException {
         Coupon coupon = Mapper.mapToCoupon(newCouponRequest);
-        coupon.setCompany(companyService.getCompany(companyId));
+        coupon.setCompany(companyService.getCompanyDetails(companyId));
         return companyService.updateCoupon(coupon);
     }
 

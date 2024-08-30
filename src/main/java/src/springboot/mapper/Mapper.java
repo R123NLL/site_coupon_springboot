@@ -29,7 +29,7 @@ public class Mapper {
     }
 
     public static Coupon mapToCoupon(NewCouponRequest ncr) throws UnAuthorizedException {
-        Coupon coupon = new Coupon(companyService.getCompany(ncr.getCompanyId()), ncr.getCategory(), ncr.getTitle(),
+        Coupon coupon = new Coupon(companyService.getCompanyDetails(ncr.getCompanyId()), ncr.getCategory(), ncr.getTitle(),
                 ncr.getDescription(), ncr.getStartDate(), ncr.getEndDate(),
                 ncr.getAmount(), ncr.getPrice(), ncr.getImage());
         return coupon;

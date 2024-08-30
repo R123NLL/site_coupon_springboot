@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "coupons")
@@ -31,6 +32,8 @@ public class Coupon {
     private double price;
     @Column(name = "image", nullable = false, length = 40)
     private String image;
+    @ManyToMany(mappedBy = "coupons")
+    private Set<Customer> customers;
 
     public Coupon() {
     }

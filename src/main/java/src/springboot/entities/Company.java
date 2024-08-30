@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "companies")
@@ -18,14 +19,14 @@ public class Company {
     private String email;
     @Column(name = "company_password", nullable = false, length = 40)
     private String password;
-    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
-    private List<Coupon> coupons;
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Coupon> coupons;
 
     public Company() {
 
     }
 
-    public Company(String name, String email, String password, List<Coupon> coupons) {
+    public Company(String name, String email, String password, Set<Coupon> coupons) {
         this.name = name;
         this.email = email;
         this.password = password;
@@ -60,11 +61,11 @@ public class Company {
         this.password = password;
     }
 
-    public List<Coupon> getCoupons() {
+    public Set<Coupon> getCoupons() {
         return coupons;
     }
 
-    public void setCoupons(ArrayList<Coupon> coupons) {
+    public void setCoupons(Set<Coupon> coupons) {
         this.coupons = coupons;
     }
 

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface CustomerService {
-    void purchaseCoupon(Long customerID, Coupon coupon) throws UnAuthorizedException;
+    void purchaseCoupon(Long customerId, Long couponId) throws UnAuthorizedException;
 
     List<Coupon> getCustomerCoupons(Long customerID) throws UnAuthorizedException;
 
