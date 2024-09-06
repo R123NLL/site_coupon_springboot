@@ -1,22 +1,23 @@
 package src.springboot.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import src.springboot.dao.CompanyRepository;
-import src.springboot.dao.CouponRepository;
-import src.springboot.dao.CustomerRepository;
+import src.springboot.repositories.CompanyRepository;
+import src.springboot.repositories.CouponRepository;
+import src.springboot.repositories.CustomerRepository;
 import src.springboot.entities.Company;
-import src.springboot.entities.Coupon;
 import src.springboot.entities.Customer;
 import src.springboot.exceptions.UnAuthorizedException;
 import src.springboot.service.AdminService;
 import src.springboot.service.ClientService;
-import src.springboot.test.AdminTester;
+
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.List;
+
 
 @Service
 public class AdminServiceImpl extends ClientService implements AdminService {
@@ -25,7 +26,9 @@ public class AdminServiceImpl extends ClientService implements AdminService {
     private static final String PASSWORD = "admin";
     private static final Logger logger = LoggerFactory.getLogger(AdminServiceImpl.class);
 
+    public AdminServiceImpl() {
 
+    }
 
     public AdminServiceImpl(CompanyRepository companyRepository, CustomerRepository customerRepository, CouponRepository couponRepository) {
         super(companyRepository, customerRepository, couponRepository);
@@ -42,98 +45,112 @@ public class AdminServiceImpl extends ClientService implements AdminService {
         return this.isLoggedIn;
     }
 
-    public void deleteAll() throws UnAuthorizedException {
-        notLoggedIn();
-        customerRepository.deleteAll();
-        companyRepository.deleteAll();
-        couponRepository.deleteAll();
-        logger.info("*All repositories have been deleted*");
-    }
 
     @Override
-    public void addCompany(Company company) throws UnAuthorizedException {
+    public Company addCompany(Company company) throws UnAuthorizedException {
         notLoggedIn();
 
-        if (!this.companyRepository.isCompanyExists(company.getEmail(), company.getName())) {
-            this.companyRepository.addCompany(company);
-        } else {
-            logger.error("Cannot add company that already exists");
+        boolean companyExists = companyRepository.existsByEmailAndPassword(company.getEmail(),company.getPassword());
+
+        if (companyExists) {
+            throw new IllegalArgumentException("Company with the name " + company.getName() +
+                    " is already exists");
         }
+        return companyRepository.save(company);
     }
 
     @Override
-    public void updateCompany(Company company) throws UnAuthorizedException {
+    public Company updateCompany(Company updatedCompany) throws UnAuthorizedException {
         notLoggedIn();
-        this.companyRepository.save(company);
+
+        Company existingCompany = companyRepository.findById(updatedCompany.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Company not found"));
+
+        existingCompany.setName(updatedCompany.getName());
+        existingCompany.setEmail(updatedCompany.getEmail());
+        existingCompany.setPassword(updatedCompany.getPassword());
+        existingCompany.setCoupons(updatedCompany.getCoupons());
+
+        return companyRepository.save(existingCompany);
     }
 
-
     @Override
-    public void deleteCompany(int companyId) throws UnAuthorizedException {
-
+    @Transactional
+    public void deleteCompany(Long companyId) throws UnAuthorizedException {
         notLoggedIn();
 
-        // Delete coupon purchase history
-        this.couponRepository.deleteCouponPurchasesByCompanyId(companyId);
+        if (!companyRepository.existsById(companyId)) {
+            throw new EntityNotFoundException("Company with ID " + companyId + " not found");
+        }
 
-        // Delete coupons
-        this.couponRepository.deleteCouponsByCompanyId(companyId);
-
-        // Delete company
-        this.companyRepository.deleteCompany(companyId);
+        companyRepository.deleteById(companyId);
     }
 
     @Override
     public List<Company> getAllCompanies() throws UnAuthorizedException {
         notLoggedIn();
-        return this.companyRepository.getAllCompanies();
+        return this.companyRepository.findAll();
     }
 
     @Override
-    public Company getOneCompany(int companyId) throws UnAuthorizedException {
+    public Company getOneCompany(Long companyId) throws UnAuthorizedException {
         notLoggedIn();
-        return this.companyRepository.getOneCompany(companyId);
+        return companyRepository.findById(companyId)
+                .orElseThrow(() -> new EntityNotFoundException("Company not found"));
     }
 
     @Override
-    public void addCustomer(Customer customer) throws UnAuthorizedException {
+    public Customer addCustomer(Customer customer) throws UnAuthorizedException {
         notLoggedIn();
-        if (!this.customerRepository.isCustomerExists(customer.getEmail())) {
-            this.customerRepository.save(customer);
-        } else {
-            logger.error("Customer with " + customer.getEmail() + " already exists");
+
+        boolean customerExists = customerRepository.existsCustomerByEmailAndPassword(customer.getEmail(), customer.getPassword());
+
+        if (customerExists) {
+            throw new IllegalArgumentException("Customer with the email " + customer.getEmail() +
+                    " is already exists");
         }
+
+        return customerRepository.save(customer);
     }
 
     @Override
-    public void updateCustomer(Customer customer) throws UnAuthorizedException {
+    public Customer updateCustomer(Customer updatedCustomer) throws UnAuthorizedException {
         notLoggedIn();
-        this.customerRepository.save(customer);
+
+        Customer existingCustomer = customerRepository.findById(updatedCustomer.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
+
+        existingCustomer.setFirstName(updatedCustomer.getFirstName());
+        existingCustomer.setLastName(updatedCustomer.getLastName());
+        existingCustomer.setEmail(updatedCustomer.getEmail());
+        existingCustomer.setPassword(updatedCustomer.getPassword());
+        existingCustomer.setCoupons(updatedCustomer.getCoupons());
+
+        return customerRepository.save(existingCustomer);
     }
 
     @Override
-    public void deleteCustomer(int customerId) throws UnAuthorizedException {
+    public void deleteCustomer(Long customerId) throws UnAuthorizedException {
         notLoggedIn();
-        this.couponRepository.detachAllCouponFromCustomer(customerId);
-        this.customerRepository.deleteCustomer(customerId);
+
+        if (!customerRepository.existsById(customerId)) {
+            throw new EntityNotFoundException("Customer with ID " + customerId + " not found");
+        }
+
+        customerRepository.deleteById(customerId);
     }
 
     @Override
     public List<Customer> getAllCustomers() throws UnAuthorizedException {
         notLoggedIn();
-        return customerRepository.getAllCustomers();
+        return customerRepository.findAll();
     }
 
     @Override
-    public List<Coupon> getAllCoupons() throws UnAuthorizedException {
+    public Customer getOneCustomer(Long customerId) throws UnAuthorizedException {
         notLoggedIn();
-        return couponRepository.findAllCoupons();
-    }
-
-    @Override
-    public Customer getOneCustomer(int customerId) throws UnAuthorizedException {
-        notLoggedIn();
-        return this.customerRepository.getOneCustomer(customerId);
+        return customerRepository.findById(customerId)
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
     }
 
     private void notLoggedIn() throws UnAuthorizedException {

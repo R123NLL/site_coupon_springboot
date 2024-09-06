@@ -5,40 +5,36 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "companies")
 public class Company {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "company_id")
-    private int id;
+    private Long id;
     @Column(name = "company_name", nullable = false, unique = true, length = 40)
     private String name;
     @Column(name = "company_email", nullable = false, unique = true, length = 40)
     private String email;
     @Column(name = "company_password", nullable = false, length = 40)
     private String password;
-    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL)
-    private List<Coupon> coupons;
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Coupon> coupons;
 
     public Company() {
+
     }
 
-    public Company(String name, String email, String password, List<Coupon> coupons) {
+    public Company(String name, String email, String password, Set<Coupon> coupons) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.coupons = coupons;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -65,11 +61,11 @@ public class Company {
         this.password = password;
     }
 
-    public List<Coupon> getCoupons() {
+    public Set<Coupon> getCoupons() {
         return coupons;
     }
 
-    public void setCoupons(ArrayList<Coupon> coupons) {
+    public void setCoupons(Set<Coupon> coupons) {
         this.coupons = coupons;
     }
 
@@ -78,7 +74,7 @@ public class Company {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Company company = (Company) o;
-        return id == company.id && Objects.equals(name, company.name) && Objects.equals(email, company.email) && Objects.equals(password, company.password) && Objects.equals(coupons, company.coupons);
+        return Objects.equals(id, company.id) && Objects.equals(name, company.name) && Objects.equals(email, company.email) && Objects.equals(password, company.password) && Objects.equals(coupons, company.coupons);
     }
 
     @Override
@@ -94,6 +90,6 @@ public class Company {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", coupons=" + coupons +
-                "}\n";
+                '}';
     }
 }

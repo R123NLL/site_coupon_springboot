@@ -10,13 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface CustomerService {
-    void purchaseCoupon(int customerID, Coupon coupon) throws UnAuthorizedException;
+    void purchaseCoupon(Long customerId, Long couponId) throws UnAuthorizedException;
 
-    List<Coupon> getCustomerCoupons(int customerID) throws UnAuthorizedException;
+    List<Coupon> getCustomerCoupons(Long customerID) throws UnAuthorizedException;
 
-    List<Coupon> getCustomerCoupons(int customerID, Category category) throws UnAuthorizedException;
+    List<Coupon> getCustomerCoupons(Long customerID, Category category) throws UnAuthorizedException;
 
-    List<Coupon> getCustomerCoupons(int customerID, double maxPrice) throws UnAuthorizedException;
+    List<Coupon> getCustomerCoupons(Long customerID, double maxPrice) throws UnAuthorizedException;
 
-    Customer getCustomerDetails(int customerID) throws UnAuthorizedException;
+    Customer getCustomerDetails(Long customerID) throws UnAuthorizedException;
 }

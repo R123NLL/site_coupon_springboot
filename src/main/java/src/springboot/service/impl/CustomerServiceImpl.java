@@ -2,9 +2,9 @@ package src.springboot.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import src.springboot.dao.CompanyRepository;
-import src.springboot.dao.CouponRepository;
-import src.springboot.dao.CustomerRepository;
+import src.springboot.repositories.CompanyRepository;
+import src.springboot.repositories.CouponRepository;
+import src.springboot.repositories.CustomerRepository;
 import src.springboot.entities.Category;
 import src.springboot.entities.Coupon;
 import src.springboot.entities.Customer;
@@ -13,7 +13,6 @@ import src.springboot.service.ClientService;
 import src.springboot.service.CustomerService;
 
 
-import java.sql.SQLException;
 import java.util.List;
 
 import static java.util.Objects.nonNull;
@@ -24,7 +23,11 @@ public class CustomerServiceImpl extends ClientService implements CustomerServic
 
     @Autowired
     private CustomerRepository customerRepository;
-    private int customerID;
+    private Long customerID;
+
+    public CustomerServiceImpl() {
+
+    }
 
     public CustomerServiceImpl(CompanyRepository companyRepository, CustomerRepository customerRepository, CouponRepository couponRepository) {
         super(companyRepository, customerRepository, couponRepository);
@@ -37,7 +40,7 @@ public class CustomerServiceImpl extends ClientService implements CustomerServic
 
         if (isNotNull && isNotEmpty) {
 
-            Customer customerByEmail = customerRepository.getOneCustomerByEmail(email);
+            Customer customerByEmail = customerRepository.findByEmail(email);
             if (nonNull(customerByEmail)) {
                 customerID = customerByEmail.getId();
                 return customerByEmail.getPassword().equals(password);
@@ -47,35 +50,41 @@ public class CustomerServiceImpl extends ClientService implements CustomerServic
     }
 
     @Override
-    public void purchaseCoupon(int customerID, Coupon coupon) throws UnAuthorizedException {
+    public void purchaseCoupon(Long customerId, Long couponId) throws UnAuthorizedException {
         notLoggedIn();
-        if (nonNull(coupon)) {
-            couponRepository.addCouponPurchase(customerID, coupon.getId());
-        }
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
+        Coupon coupon = couponRepository.findById(couponId)
+                .orElseThrow(() -> new IllegalArgumentException("Coupon not found"));
+
+        customer.getCoupons().add(coupon); //adding the coupon to the customer's list
+        customerRepository.save(customer); //saving the updated customer
     }
 
     @Override
-    public List<Coupon> getCustomerCoupons(int customerID) throws UnAuthorizedException {
+    public List<Coupon> getCustomerCoupons(Long customerId) throws UnAuthorizedException {
         notLoggedIn();
-        return couponRepository.getAllCustomerCoupons(customerID);
+        return couponRepository.findByCustomersId(customerId);
+
     }
 
     @Override
-    public List<Coupon> getCustomerCoupons(int customerID, Category category) throws UnAuthorizedException {
+    public List<Coupon> getCustomerCoupons(Long customerId, Category category) throws UnAuthorizedException {
         notLoggedIn();
-        return couponRepository.getAllCustomerCoupons(customerID, category);
+        return couponRepository.findByCustomersIdAndCategory(customerId, category);
     }
 
     @Override
-    public List<Coupon> getCustomerCoupons(int customerID, double maxPrice) throws UnAuthorizedException {
+    public List<Coupon> getCustomerCoupons(Long customerId, double maxPrice) throws UnAuthorizedException {
         notLoggedIn();
-        return couponRepository.getCustomerCouponsBelowPrice(customerID, maxPrice);
+        return couponRepository.findByCustomersIdAndPriceLessThanEqual(customerId, maxPrice);
     }
 
     @Override
-    public Customer getCustomerDetails(int customerID) throws UnAuthorizedException {
+    public Customer getCustomerDetails(Long customerId) throws UnAuthorizedException {
         notLoggedIn();
-        return customerRepository.getOneCustomer(customerID);
+        return customerRepository.findById(customerId)
+                .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
     }
 
     private void notLoggedIn() throws UnAuthorizedException {

@@ -2,12 +2,13 @@ package src.springboot.dto;
 
 
 import src.springboot.entities.Category;
-import src.springboot.entities.Company;
+
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class NewCouponRequest {
-    private Company company;
+    private Long companyId;
     private Category category;
     private String title;
     private String description;
@@ -21,8 +22,8 @@ public class NewCouponRequest {
 
     }
 
-    public NewCouponRequest(Company company, Category category, String title, String description, LocalDate startDate, LocalDate endDate, int amount, double price, String image) {
-        this.company = company;
+    public NewCouponRequest(Long companyId, Category category, String title, String description, LocalDate startDate, LocalDate endDate, int amount, double price, String image) {
+        this.companyId = companyId;
         this.category = category;
         this.title = title;
         this.description = description;
@@ -33,12 +34,12 @@ public class NewCouponRequest {
         this.image = image;
     }
 
-    public Company getCompany() {
-        return company;
+    public Long getCompanyId() {
+        return companyId;
     }
 
-    public void setCompany(Company company) {
-        this.company = company;
+    public void setCompanyId(Long companyId) {
+        this.companyId = companyId;
     }
 
     public Category getCategory() {
@@ -106,17 +107,20 @@ public class NewCouponRequest {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        NewCouponRequest that = (NewCouponRequest) o;
+        return amount == that.amount && Double.compare(price, that.price) == 0 && Objects.equals(companyId, that.companyId) && category == that.category && Objects.equals(title, that.title) && Objects.equals(description, that.description) && Objects.equals(startDate, that.startDate) && Objects.equals(endDate, that.endDate) && Objects.equals(image, that.image);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(companyId, category, title, description, startDate, endDate, amount, price, image);
+    }
+
+    @Override
     public String toString() {
-        return "NewCouponRequest{" +
-                "company=" + company +
-                ", category=" + category +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
-                ", amount=" + amount +
-                ", price=" + price +
-                ", image='" + image + '\'' +
-                '}';
+        return "NewCouponRequest{" + "companyId=" + companyId + ", category=" + category + ", title='" + title + '\'' + ", description='" + description + '\'' + ", startDate=" + startDate + ", endDate=" + endDate + ", amount=" + amount + ", price=" + price + ", image='" + image + '\'' + '}';
     }
 }

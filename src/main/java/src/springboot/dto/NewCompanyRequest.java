@@ -2,19 +2,20 @@ package src.springboot.dto;
 
 import src.springboot.entities.Coupon;
 
-import java.util.ArrayList;
+
+import java.util.Set;
 
 public class NewCompanyRequest {
     private String name;
     private String email;
     private String password;
-    private ArrayList<Coupon> coupons;
+    private Set<Coupon> coupons;
 
     public NewCompanyRequest() {
 
     }
 
-    public NewCompanyRequest(String name, String email, String password, ArrayList<Coupon> coupons) {
+    public NewCompanyRequest(String name, String email, String password, Set<Coupon> coupons) {
         this.name = name;
         this.email = email;
         this.password = password;
@@ -45,11 +46,11 @@ public class NewCompanyRequest {
         this.password = password;
     }
 
-    public ArrayList<Coupon> getCoupons() {
+    public Set<Coupon> getCoupons() {
         return coupons;
     }
 
-    public void setCoupons(ArrayList<Coupon> coupons) {
+    public void setCoupons(Set<Coupon> coupons) {
         this.coupons = coupons;
     }
 

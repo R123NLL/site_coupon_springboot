@@ -1,42 +1,38 @@
 package src.springboot.service.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import src.springboot.dao.CompanyRepository;
-import src.springboot.dao.CouponRepository;
-import src.springboot.dao.CustomerRepository;
-import src.springboot.dto.NewCompanyRequest;
+import src.springboot.repositories.CompanyRepository;
+import src.springboot.repositories.CouponRepository;
+import src.springboot.repositories.CustomerRepository;
 import src.springboot.entities.Category;
 import src.springboot.entities.Company;
 import src.springboot.entities.Coupon;
 import src.springboot.exceptions.UnAuthorizedException;
-import src.springboot.job.CouponExpirationDailyJob;
 import src.springboot.service.ClientService;
 import src.springboot.service.CompanyService;
 
-import java.sql.SQLException;
+
 import java.util.List;
 
 import static java.util.Objects.nonNull;
 
 @Service
-public class CompanyServiceImpl extends ClientService  implements CompanyService {
+public class CompanyServiceImpl extends ClientService implements CompanyService {
 
     @Autowired
     private CompanyRepository companyRepository;
-
     @Autowired
     private CustomerRepository customerRepository;
-
     @Autowired
     private CouponRepository couponRepository;
-    private int companyId;
 
-    private static final Logger logger = LoggerFactory.getLogger(CouponExpirationDailyJob.class);
+    private Long companyId;
 
+    public CompanyServiceImpl() {
+
+    }
 
     public CompanyServiceImpl(CompanyRepository companyRepository, CustomerRepository customerRepository, CouponRepository couponRepository) {
         super(companyRepository, customerRepository, couponRepository);
@@ -50,7 +46,7 @@ public class CompanyServiceImpl extends ClientService  implements CompanyService
 
         if (isNotNull && isNotEmpty) {
 
-            Company companyByEmail = companyRepository.getOneCompanyByEmail(email);
+            Company companyByEmail = companyRepository.findByEmail(email);
             if (nonNull(companyByEmail)) {
                 companyId = companyByEmail.getId();
                 return companyByEmail.getPassword().equals(password);
@@ -60,56 +56,98 @@ public class CompanyServiceImpl extends ClientService  implements CompanyService
     }
 
     @Override
-    public void addCoupon(Coupon coupon, int companyId) throws UnAuthorizedException {
+    public Coupon addCoupon(Coupon coupon) throws UnAuthorizedException {
         notLoggedIn();
 
-        //Fetching the company by its ID
-        Company company = companyRepository.getOneCompany(companyId);
-        coupon.setCompany(company);
+        Company company = companyRepository.findById(coupon.getCompany().getId())
+                .orElseThrow(() -> new EntityNotFoundException("Company not found"));
 
-        if (!couponRepository.isCouponExist(coupon)) {
-            couponRepository.save(coupon);
-        } else {
-            System.out.println("Coupon already with title " + coupon.getTitle() + " for companyId:" + companyId + " exist");
+        boolean couponExists = couponRepository.existsByTitleAndCompanyId(coupon.getTitle(), company.getId());
+
+        if (couponExists) {
+            throw new IllegalArgumentException("Coupon with title " + coupon.getTitle() +
+                    " for companyId: " + company.getId() + " already exists");
         }
+
+        return couponRepository.save(coupon);
     }
 
     @Override
-    public void updateCoupon(Coupon coupon) throws UnAuthorizedException {
+    public Coupon updateCoupon(Coupon updatedCoupon) throws UnAuthorizedException {
         notLoggedIn();
-        couponRepository.save(coupon);
-    }
 
+        Coupon existingCoupon = couponRepository.findById(updatedCoupon.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Coupon not found"));
+
+        Company company = companyRepository.findById(updatedCoupon.getCompany().getId())
+                .orElseThrow(() -> new EntityNotFoundException("Company not found"));
+
+        boolean couponExists = couponRepository.existsByTitleAndCompanyId(updatedCoupon.getTitle(), company.getId());
+        if (couponExists && !existingCoupon.getTitle().equals(updatedCoupon.getTitle())) {
+            throw new IllegalArgumentException("Coupon with title " + updatedCoupon.getTitle() +
+                    " for companyId: " + company.getId() + " already exists");
+        }
+
+        existingCoupon.setCompany(company);
+        existingCoupon.setTitle(updatedCoupon.getTitle());
+        existingCoupon.setDescription(updatedCoupon.getDescription());
+        existingCoupon.setCategory(updatedCoupon.getCategory());
+        existingCoupon.setStartDate(updatedCoupon.getStartDate());
+        existingCoupon.setEndDate(updatedCoupon.getEndDate());
+        existingCoupon.setAmount(updatedCoupon.getAmount());
+        existingCoupon.setPrice(updatedCoupon.getPrice());
+        existingCoupon.setImage(updatedCoupon.getImage());
+
+
+        return couponRepository.save(existingCoupon);
+    }
 
     public void deleteCoupon(Long couponId) throws UnAuthorizedException {
         notLoggedIn();
+
+        if (!couponRepository.existsById(couponId)) {
+            throw new EntityNotFoundException("Coupon with ID " + couponId + " not found");
+        }
+
         couponRepository.deleteById(couponId);
     }
 
     @Override
-    public List<Coupon> getCompanyCoupons(int companyId) throws UnAuthorizedException {
-        notLoggedIn();
-        return couponRepository.getAllCompanyCoupons(companyId);
+    public List<Coupon> getCompanyCoupons(Long companyId) {
+        return couponRepository.findByCompanyId(companyId);
     }
 
     @Override
-    public List<Coupon> getCompanyCoupons(int companyId, Category category) throws UnAuthorizedException {
+    public List<Coupon> getCompanyCoupons(Long companyId, Category category) throws UnAuthorizedException {
         notLoggedIn();
-        return couponRepository.getAllCompanyCoupons(companyId, category);
+        List<Coupon> coupons = couponRepository.findByCompanyIdAndCategory(companyId, category);
+
+        if (coupons.isEmpty()) {
+            System.out.println("No coupons found for companyId: " + companyId + " and category: " + category);
+        }
+
+        return coupons;
     }
 
     @Override
-    public List<Coupon> getCompanyCoupons(int companyId, double maxPrice) throws UnAuthorizedException {
+    public List<Coupon> getCompanyCoupons(Long companyId, double maxPrice) throws UnAuthorizedException {
         notLoggedIn();
-        return couponRepository.getCompanyCouponsBelowPrice(companyId, maxPrice);
+        List<Coupon> coupons = couponRepository.findByCompanyIdAndPriceLessThanEqual(companyId, maxPrice);
+
+        if (coupons.isEmpty()) {
+            System.out.println("No coupons found for companyId: " + companyId + " with max price of: " + maxPrice);
+        }
+
+        return coupons;
     }
 
     @Override
-    public Company getCompanyDetails(int companyId) throws UnAuthorizedException {
-        notLoggedIn();
-        return companyRepository.getOneCompany(companyId);
+    public Company getCompanyDetails(Long companyID) throws UnAuthorizedException {
+        return companyRepository.findById(companyID)
+                .orElseThrow(() -> new EntityNotFoundException("Company not found"));
     }
 
+    // method to check authorization before using the other methods
     private void notLoggedIn() throws UnAuthorizedException {
         if (this.companyId <= 0) {
             throw new UnAuthorizedException("Access denied, please log in!");

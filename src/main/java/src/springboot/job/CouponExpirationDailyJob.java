@@ -4,11 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import src.springboot.dao.CouponRepository;
+import src.springboot.repositories.CouponRepository;
 import src.springboot.entities.Coupon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.sql.Date;
 import java.time.LocalDate;
 

@@ -1,20 +1,25 @@
 package src.springboot.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import src.springboot.dao.CompanyRepository;
-import src.springboot.dao.CouponRepository;
-import src.springboot.dao.CustomerRepository;
+import src.springboot.repositories.CompanyRepository;
+import src.springboot.repositories.CouponRepository;
+import src.springboot.repositories.CustomerRepository;
 
 import java.sql.SQLException;
 
 @Service
 public abstract class ClientService {
+    @Autowired
+    protected  CompanyRepository companyRepository;
+    @Autowired
+    protected  CustomerRepository customerRepository;
+    @Autowired
+    protected  CouponRepository couponRepository;
 
-    protected final CompanyRepository companyRepository;
+    public ClientService(){
 
-    protected final CustomerRepository customerRepository;
-
-    protected final CouponRepository couponRepository;
+    }
 
     public ClientService(CompanyRepository companyRepository, CustomerRepository customerRepository, CouponRepository couponRepository) {
         this.companyRepository = companyRepository;
