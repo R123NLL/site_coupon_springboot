@@ -1,22 +1,30 @@
 package src.springboot.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import src.springboot.dto.NewCouponRequest;
 import src.springboot.entities.Category;
+import src.springboot.entities.ClientType;
 import src.springboot.entities.Coupon;
 import src.springboot.exceptions.UnAuthorizedException;
 import src.springboot.mapper.Mapper;
 import src.springboot.service.CompanyService;
 
+
 import java.util.List;
 
 @RestController
 @RequestMapping("/companies")
-public class CompanyController {
+public class CompanyController extends ClientController{
     @Autowired
     private CompanyService companyService;
 
+    @Override
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password, @RequestParam ClientType clientType) {
+        return super.login(email, password, clientType);
+    }
     @GetMapping("/{companyId}/coupons")
     public List<Coupon> getCompanyCoupons(@PathVariable Long companyId) {
         return companyService.getCompanyCoupons(companyId);

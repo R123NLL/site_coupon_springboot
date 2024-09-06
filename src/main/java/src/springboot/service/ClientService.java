@@ -2,9 +2,9 @@ package src.springboot.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import src.springboot.dao.CompanyRepository;
-import src.springboot.dao.CouponRepository;
-import src.springboot.dao.CustomerRepository;
+import src.springboot.repositories.CompanyRepository;
+import src.springboot.repositories.CouponRepository;
+import src.springboot.repositories.CustomerRepository;
 
 import java.sql.SQLException;
 

@@ -5,11 +5,10 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import src.springboot.dao.CompanyRepository;
-import src.springboot.dao.CouponRepository;
-import src.springboot.dao.CustomerRepository;
+import src.springboot.repositories.CompanyRepository;
+import src.springboot.repositories.CouponRepository;
+import src.springboot.repositories.CustomerRepository;
 import src.springboot.entities.Company;
-import src.springboot.entities.Coupon;
 import src.springboot.entities.Customer;
 import src.springboot.exceptions.UnAuthorizedException;
 import src.springboot.service.AdminService;
@@ -51,7 +50,7 @@ public class AdminServiceImpl extends ClientService implements AdminService {
     public Company addCompany(Company company) throws UnAuthorizedException {
         notLoggedIn();
 
-        boolean companyExists = companyRepository.existsById(company.getId());
+        boolean companyExists = companyRepository.existsByEmailAndPassword(company.getEmail(),company.getPassword());
 
         if (companyExists) {
             throw new IllegalArgumentException("Company with the name " + company.getName() +
@@ -59,7 +58,6 @@ public class AdminServiceImpl extends ClientService implements AdminService {
         }
         return companyRepository.save(company);
     }
-
 
     @Override
     public Company updateCompany(Company updatedCompany) throws UnAuthorizedException {
@@ -75,7 +73,6 @@ public class AdminServiceImpl extends ClientService implements AdminService {
 
         return companyRepository.save(existingCompany);
     }
-
 
     @Override
     @Transactional
@@ -112,6 +109,7 @@ public class AdminServiceImpl extends ClientService implements AdminService {
             throw new IllegalArgumentException("Customer with the email " + customer.getEmail() +
                     " is already exists");
         }
+
         return customerRepository.save(customer);
     }
 
@@ -149,12 +147,6 @@ public class AdminServiceImpl extends ClientService implements AdminService {
     }
 
     @Override
-    public List<Coupon> getAllCoupons() throws UnAuthorizedException {
-        notLoggedIn();
-        return couponRepository.findAll();
-    }
-
-    @Override
     public Customer getOneCustomer(Long customerId) throws UnAuthorizedException {
         notLoggedIn();
         return customerRepository.findById(customerId)
@@ -166,13 +158,4 @@ public class AdminServiceImpl extends ClientService implements AdminService {
             throw new UnAuthorizedException("Access denied, please log in!");
         }
     }
-
-
-    //public void deleteAll() throws UnAuthorizedException {
-//        notLoggedIn();
-//        customerRepository.deleteAll();
-//        companyRepository.deleteAll();
-//        couponRepository.deleteAll();
-//        logger.info("*All repositories have been deleted*");
-//    }
 }

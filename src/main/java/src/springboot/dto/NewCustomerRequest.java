@@ -2,7 +2,7 @@ package src.springboot.dto;
 
 import src.springboot.entities.Coupon;
 
-import java.util.ArrayList;
+
 import java.util.Set;
 
 public class NewCustomerRequest {

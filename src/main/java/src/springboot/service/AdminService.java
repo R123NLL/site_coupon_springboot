@@ -1,14 +1,12 @@
 package src.springboot.service;
 
 import src.springboot.entities.Company;
-import src.springboot.entities.Coupon;
 import src.springboot.entities.Customer;
 import src.springboot.exceptions.UnAuthorizedException;
 
 import java.util.List;
 
 public interface AdminService {
-    //void deleteAll() throws UnAuthorizedException;
 
     Company addCompany(Company company) throws UnAuthorizedException;
 
@@ -27,8 +25,6 @@ public interface AdminService {
     void deleteCustomer(Long customerId) throws UnAuthorizedException;
 
     List<Customer> getAllCustomers() throws UnAuthorizedException;
-
-    List<Coupon> getAllCoupons() throws UnAuthorizedException;
 
     Customer getOneCustomer(Long customerId) throws UnAuthorizedException;
 

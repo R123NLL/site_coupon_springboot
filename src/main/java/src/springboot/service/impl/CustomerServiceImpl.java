@@ -1,11 +1,10 @@
 package src.springboot.service.impl;
 
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import src.springboot.dao.CompanyRepository;
-import src.springboot.dao.CouponRepository;
-import src.springboot.dao.CustomerRepository;
+import src.springboot.repositories.CompanyRepository;
+import src.springboot.repositories.CouponRepository;
+import src.springboot.repositories.CustomerRepository;
 import src.springboot.entities.Category;
 import src.springboot.entities.Coupon;
 import src.springboot.entities.Customer;
@@ -14,7 +13,6 @@ import src.springboot.service.ClientService;
 import src.springboot.service.CustomerService;
 
 
-import java.sql.SQLException;
 import java.util.List;
 
 import static java.util.Objects.nonNull;

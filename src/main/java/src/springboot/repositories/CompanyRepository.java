@@ -1,10 +1,9 @@
-package src.springboot.dao;
+package src.springboot.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import src.springboot.entities.Company;
 
-import java.util.List;
 
 @Repository
 public interface CompanyRepository extends JpaRepository<Company,Long> {

@@ -2,7 +2,7 @@ package src.springboot.dto;
 
 
 import src.springboot.entities.Category;
-import src.springboot.entities.Company;
+
 
 import java.time.LocalDate;
 import java.util.Objects;
