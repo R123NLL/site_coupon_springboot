@@ -1,0 +1,15 @@
+.LoginComponent {
+    height: 90vh;
+}
+
+.login-bg {
+    background-image: url("/public/images/coupons.webp");
+}
+
+.form {
+    background-color: rgba(247, 228, 78, 0.9);
+    border-radius: 25%;
+    margin: 25px;
+    padding: 50px;
+    width: 400px;
+}
