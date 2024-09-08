@@ -55,6 +55,10 @@ public class CompanyServiceImpl extends ClientService implements CompanyService 
         return false;
     }
 
+    public Long getIdByEmail(String email)  {
+        return companyRepository.findByEmail(email).getId();
+    }
+
     @Override
     public Coupon addCoupon(Coupon coupon) throws UnAuthorizedException {
         notLoggedIn();
@@ -153,4 +157,6 @@ public class CompanyServiceImpl extends ClientService implements CompanyService 
             throw new UnAuthorizedException("Access denied, please log in!");
         }
     }
+
+
 }

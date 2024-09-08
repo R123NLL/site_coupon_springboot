@@ -49,6 +49,10 @@ public class CustomerServiceImpl extends ClientService implements CustomerServic
         return false;
     }
 
+    public Long getIdByEmail(String email) {
+        return customerRepository.findByEmail(email).getId();
+    }
+
     @Override
     public void purchaseCoupon(Long customerId, Long couponId) throws UnAuthorizedException {
         notLoggedIn();
@@ -92,6 +96,7 @@ public class CustomerServiceImpl extends ClientService implements CustomerServic
             throw new UnAuthorizedException("Access denied, please log in first!");
         }
     }
+
 
 
 }

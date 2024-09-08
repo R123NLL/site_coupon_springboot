@@ -30,36 +30,39 @@ public class LoginManager {
     }
 
 
-
     public String login(String email, String password, ClientType type) throws LoginSecurityException, SQLException, InterruptedException {
-        ClientService clientService;
+        Long userId;
+        String role;
 
         switch (type) {
             case Administrator:
                 if (!adminService.login(email, password)) {
                     throw new LoginSecurityException("Email or password is invalid, try again");
                 }
-                clientService = adminService;
+                userId = adminService.getAdminId();
+                role = ClientType.Administrator.toString();
                 break;
 
             case Company:
                 if (!companyService.login(email, password)) {
                     throw new LoginSecurityException("Email or password is invalid, try again");
                 }
-                clientService = companyService;
+                userId = companyService.getIdByEmail(email);
+                role = ClientType.Company.toString();
                 break;
 
             case Customer:
                 if (!customerService.login(email, password)) {
                     throw new LoginSecurityException("Email or password is invalid, try again");
                 }
-                clientService = customerService;
+                userId = customerService.getIdByEmail(email);
+                role = ClientType.Customer.toString();
                 break;
 
             default:
                 throw new IllegalArgumentException("Unknown client type");
         }
 
-        return jwtUtil.generateToken(email); // Return token upon successful login
+        return jwtUtil.generateToken(userId, role); // Return token upon successful login
     }
 }
