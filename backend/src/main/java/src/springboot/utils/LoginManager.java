@@ -4,13 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import src.springboot.entities.ClientType;
 import src.springboot.exceptions.LoginSecurityException;
-import src.springboot.service.ClientService;
 import src.springboot.service.impl.AdminServiceImpl;
 import src.springboot.service.impl.CompanyServiceImpl;
 import src.springboot.service.impl.CustomerServiceImpl;
 
 
 import java.sql.SQLException;
+
+import static src.springboot.entities.ClientType.*;
 
 @Service
 public class LoginManager {
@@ -40,7 +41,7 @@ public class LoginManager {
                     throw new LoginSecurityException("Email or password is invalid, try again");
                 }
                 userId = adminService.getAdminId();
-                role = ClientType.Administrator.toString();
+                role = Administrator.toString();
                 break;
 
             case Company:
@@ -48,7 +49,7 @@ public class LoginManager {
                     throw new LoginSecurityException("Email or password is invalid, try again");
                 }
                 userId = companyService.getIdByEmail(email);
-                role = ClientType.Company.toString();
+                role = Company.toString();
                 break;
 
             case Customer:
@@ -56,7 +57,7 @@ public class LoginManager {
                     throw new LoginSecurityException("Email or password is invalid, try again");
                 }
                 userId = customerService.getIdByEmail(email);
-                role = ClientType.Customer.toString();
+                role = Customer.toString();
                 break;
 
             default:
