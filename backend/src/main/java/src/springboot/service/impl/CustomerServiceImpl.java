@@ -1,5 +1,7 @@
 package src.springboot.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import src.springboot.repositories.CompanyRepository;
@@ -24,6 +26,7 @@ public class CustomerServiceImpl extends ClientService implements CustomerServic
     @Autowired
     private CustomerRepository customerRepository;
     private Long customerID;
+    private static final Logger logger = LoggerFactory.getLogger(CustomerServiceImpl.class);
 
     public CustomerServiceImpl() {
 
@@ -43,9 +46,11 @@ public class CustomerServiceImpl extends ClientService implements CustomerServic
             Customer customerByEmail = customerRepository.findByEmail(email);
             if (nonNull(customerByEmail)) {
                 customerID = customerByEmail.getId();
+                logger.info("Logged is successfully, Welcome back "+ customerByEmail.getFirstName());
                 return customerByEmail.getPassword().equals(password);
             }
         }
+        logger.error("Login failed: Email or password are incorrect, try again");
         return false;
     }
 

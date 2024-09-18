@@ -39,9 +39,9 @@ public class AdminServiceImpl extends ClientService implements AdminService {
     public boolean login(String email, String password) throws SQLException, InterruptedException {
         this.isLoggedIn = EMAIL.equalsIgnoreCase(email) && PASSWORD.equals(password);
         if (this.isLoggedIn) {
-            logger.info("You are logged in to admin");
+            logger.info("Logged is successfully, Welcome back administrator");
         } else {
-            logger.error("Email or password incorrect, try again");
+            logger.error("Login failed: Email or password are incorrect, try again");
         }
         return this.isLoggedIn;
     }
