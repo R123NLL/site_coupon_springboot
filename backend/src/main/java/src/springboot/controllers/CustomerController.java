@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import src.springboot.dto.NewLoginRequest;
 import src.springboot.entities.Category;
 import src.springboot.entities.ClientType;
 import src.springboot.entities.Coupon;
@@ -23,8 +24,8 @@ public class CustomerController extends ClientController {
 
     @Override
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password, @RequestParam ClientType clientType) {
-        return super.login(email, password, clientType);
+    public ResponseEntity<String> login(@RequestBody NewLoginRequest newLoginRequest) {
+        return super.login(newLoginRequest);
     }
 
     @GetMapping("/{customerId}/coupons")

@@ -4,12 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import src.springboot.dto.NewCompanyRequest;
 import src.springboot.dto.NewCouponRequest;
 import src.springboot.dto.NewCustomerRequest;
+import src.springboot.dto.NewLoginRequest;
 import src.springboot.entities.Company;
 import src.springboot.entities.Coupon;
 import src.springboot.entities.Customer;
 import src.springboot.exceptions.UnAuthorizedException;
 import src.springboot.service.CompanyService;
 import src.springboot.service.CustomerService;
+import src.springboot.utils.LoginManager;
 
 public class Mapper {
     @Autowired
@@ -34,4 +36,5 @@ public class Mapper {
                 ncr.getAmount(), ncr.getPrice(), ncr.getImage());
         return coupon;
     }
+
 }
