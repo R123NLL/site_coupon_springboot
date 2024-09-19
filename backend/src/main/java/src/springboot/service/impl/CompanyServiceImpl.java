@@ -1,6 +1,8 @@
 package src.springboot.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import src.springboot.repositories.CompanyRepository;
@@ -29,6 +31,8 @@ public class CompanyServiceImpl extends ClientService implements CompanyService 
     private CouponRepository couponRepository;
 
     private Long companyId;
+    private static final Logger logger = LoggerFactory.getLogger(CompanyServiceImpl.class);
+
 
     public CompanyServiceImpl() {
 
@@ -49,10 +53,16 @@ public class CompanyServiceImpl extends ClientService implements CompanyService 
             Company companyByEmail = companyRepository.findByEmail(email);
             if (nonNull(companyByEmail)) {
                 companyId = companyByEmail.getId();
+                logger.info("Logged is successfully, Welcome back "+companyByEmail.getName());
                 return companyByEmail.getPassword().equals(password);
             }
         }
+        logger.error("Login failed: Email or password are incorrect, try again");
         return false;
+    }
+
+    public Long getIdByEmail(String email) {
+        return companyRepository.findByEmail(email).getId();
     }
 
     @Override
@@ -153,4 +163,6 @@ public class CompanyServiceImpl extends ClientService implements CompanyService 
             throw new UnAuthorizedException("Access denied, please log in!");
         }
     }
+
+
 }

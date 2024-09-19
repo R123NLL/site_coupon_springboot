@@ -19,4 +19,5 @@ public interface CustomerService {
     List<Coupon> getCustomerCoupons(Long customerID, double maxPrice) throws UnAuthorizedException;
 
     Customer getCustomerDetails(Long customerID) throws UnAuthorizedException;
+    Long getIdByEmail(String email) throws UnAuthorizedException;
 }

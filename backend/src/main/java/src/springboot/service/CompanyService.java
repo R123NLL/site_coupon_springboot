@@ -23,4 +23,5 @@ public interface CompanyService {
     Company getCompanyDetails(Long companyID) throws UnAuthorizedException;
 
     void deleteCoupon(Long couponId) throws UnAuthorizedException;
+    Long getIdByEmail(String email) throws UnAuthorizedException;
 }

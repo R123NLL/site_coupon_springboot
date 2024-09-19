@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import src.springboot.repositories.CompanyRepository;
 import src.springboot.repositories.CouponRepository;
@@ -38,11 +39,15 @@ public class AdminServiceImpl extends ClientService implements AdminService {
     public boolean login(String email, String password) throws SQLException, InterruptedException {
         this.isLoggedIn = EMAIL.equalsIgnoreCase(email) && PASSWORD.equals(password);
         if (this.isLoggedIn) {
-            logger.info("You are logged in");
+            logger.info("Logged is successfully, Welcome back administrator");
         } else {
-            logger.error("Email or password incorrect, try again");
+            logger.error("Login failed: Email or password are incorrect, try again");
         }
         return this.isLoggedIn;
+    }
+
+    public Long getAdminId(){
+        return 1L;
     }
 
 
