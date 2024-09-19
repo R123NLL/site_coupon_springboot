@@ -1,20 +1,30 @@
 import axios from "axios";
+import { roles } from "../../shared/common";
 
-export const customerTypes = [
-    { id: 1, name: 'מנהל' },
-    { id: 2, name: 'עסק' },
-    { id: 3, name: 'לקוח' },
+export const clientTypes = [
+    { id: 1, name: 'מנהל', role: roles.administrator },
+    { id: 2, name: 'עסק', role: roles.company },
+    { id: 3, name: 'לקוח', role: roles.customer },
 ];
 
 export function validateLoginForm(loginData){
-    return loginData.customerType > 0
-    && loginData.username
+
+    return loginData.clientType
+    && loginData.email
     && loginData.password
-    && loginData.username.length >= 3
+    && loginData.email.length >= 3
     && loginData.password.length >= 3;
 }
 
-export function submit(loginData){
-    console.log('Will send: ', loginData);
-    //const token = axios.get('/', loginData);
+export async function submit(loginData){
+    const apiUrl = process.env.REACT_APP_API_URL;
+
+    // TODO: Server DTO input should accept role id (number), not string
+    // Temp: work around
+    let clientType = loginData.clientType;
+    loginData.clientType = clientType.charAt(0).toUpperCase() 
+        + clientType.slice(1).toLowerCase();
+
+    const response = await axios.post(apiUrl + '/login', loginData );
+    return response.data;
 }
