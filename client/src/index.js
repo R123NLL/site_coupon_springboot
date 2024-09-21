@@ -3,11 +3,31 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { Provider } from 'react-redux';
+import { store } from './state/store';
+import axios from 'axios';
+import { jwtDecode } from "jwt-decode";
+
+axios.interceptors.request.use(request => {
+
+  const token = store.getState().auth.token;
+  if (token) {
+    const decodedToken = jwtDecode(token);
+    const currentTime = Date.now() / 1000;
+    if (decodedToken.exp > currentTime) {
+      request.headers.Authorization = token;
+    }
+  }
+
+  return request;
+});
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </React.StrictMode>
 );
 
