@@ -16,7 +16,7 @@ import src.springboot.service.CustomerService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/customers")
+@RequestMapping("/api/v1/customers")
 public class CustomerController extends ClientController {
     @Autowired
     private CustomerService customerService;
