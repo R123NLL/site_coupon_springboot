@@ -16,7 +16,7 @@ import src.springboot.service.AdminService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/api/v1/admin")
 public class AdminController extends ClientController {
 
     @Autowired
