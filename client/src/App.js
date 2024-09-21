@@ -3,12 +3,14 @@ import './App.css';
 import FooterComponent from './components/FooterComponent';
 import HeaderComponent from './components/HeaderComponent';
 import LoginComponent from './components/Login/LoginComponent';
-import Home from './pages/Home';
-import AuthTest from './pages/AuthTest';
-import store from './state/store';
 import '/node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { roles } from './shared/common';
 import { Navigate, BrowserRouter, Routes, Route } from 'react-router-dom';
+import NotFoundPage from './pages/NotFoundPage';
+import WelcomePage from './pages/WelcomePage';
+import CustomerPage from './pages/CustomerPage';
+import CompanyPage from './pages/CompanyPage';
+import ManagerPage from './pages/ManagerPage';
 
 function CheckRouteAccess({ children, role }) {
   const userRole = useSelector(store => store.auth.role);
@@ -25,13 +27,24 @@ function App() {
       <BrowserRouter>
         <HeaderComponent />
         <Routes>
-          <Route path='/' element={<Home />} />
+          <Route path='/' element={< WelcomePage />} />
           <Route path='/login' element={<LoginComponent />} />
-          <Route path='/test' element={
+          <Route path='/customer' element={
             <CheckRouteAccess role={roles.customer}>
-              <AuthTest />
+              < CustomerPage />
             </CheckRouteAccess>
           } />
+          <Route path='/company' element={
+            <CheckRouteAccess role={roles.company}>
+              < CompanyPage />
+            </CheckRouteAccess>
+          } />
+          <Route path='/manager' element={
+            <CheckRouteAccess role={roles.administrator}>
+              < ManagerPage />
+            </CheckRouteAccess>
+          } />
+          <Route path='*' element={<NotFoundPage />} />
         </Routes>
         <FooterComponent />
       </BrowserRouter>

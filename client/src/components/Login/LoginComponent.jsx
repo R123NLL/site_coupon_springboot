@@ -35,7 +35,7 @@ export default function LoginComponent() {
         
         // TODO: remove it, this one only for test
         // navigation to the protected route
-        navigate('/test');
+        navigate('/customer');
     }
 
     useEffect(() => {
