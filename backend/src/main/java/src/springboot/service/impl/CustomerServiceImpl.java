@@ -46,7 +46,7 @@ public class CustomerServiceImpl extends ClientService implements CustomerServic
             Customer customerByEmail = customerRepository.findByEmail(email);
             if (nonNull(customerByEmail)) {
                 customerID = customerByEmail.getId();
-                logger.info("Logged is successfully, Welcome back "+ customerByEmail.getFirstName());
+                logger.info("Logged is successfully, Welcome back " + customerByEmail.getFirstName());
                 return customerByEmail.getPassword().equals(password);
             }
         }
@@ -90,6 +90,12 @@ public class CustomerServiceImpl extends ClientService implements CustomerServic
     }
 
     @Override
+    public List<Coupon> findUnboughtCouponsByCustomerId(Long customerId) throws UnAuthorizedException {
+        notLoggedIn();
+        return customerRepository.findUnboughtCouponsByCustomerId(customerId);
+    }
+
+    @Override
     public Customer getCustomerDetails(Long customerId) throws UnAuthorizedException {
         notLoggedIn();
         return customerRepository.findById(customerId)
@@ -101,7 +107,6 @@ public class CustomerServiceImpl extends ClientService implements CustomerServic
             throw new UnAuthorizedException("Access denied, please log in first!");
         }
     }
-
 
 
 }
