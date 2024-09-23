@@ -64,8 +64,8 @@ INSERT INTO site_coupons_springboot.coupons (company_id, category, title, descri
     (2, 'FOOD', 'Free Dessert', 'Get a free dessert with every meal', '2024-09-05', '2024-09-15', 100, 0.00, 'dessert.jpg'),
     (3, 'VACATION', 'Flight Discounts', 'Save big on flights', '2024-09-01', '2024-10-01', 50, 399.99, 'flight.jpg'),
     (3, 'VACATION', 'Hotel Stay Offers', '50% off hotel stays', '2024-09-15', '2024-09-30', 20, 199.99, 'hotel.jpg'),
-    (4, 'RESTURANT', 'Summer Collection Sale', 'Up to 70% off', '2024-09-01', '2024-09-20', 300, 49.99, 'clothes.jpg'),
-    (4, 'RESTURANT', 'Shoes Discount', 'Buy one get one free', '2024-09-10', '2024-09-30', 100, 79.99, 'shoes.jpg'),
+    (4, 'CLOTHING', 'Summer Collection Sale', 'Up to 70% off', '2024-09-01', '2024-09-20', 300, 49.99, 'clothes.jpg'),
+    (4, 'CLOTHING', 'Shoes Discount', 'Buy one get one free', '2024-09-10', '2024-09-30', 100, 79.99, 'shoes.jpg'),
     (5, 'ELECTRICITY', '50% off Smartphones', 'Latest smartphones on sale', '2024-09-01', '2024-09-25', 75, 599.99, 'smartphone.jpg'),
     (5, 'ELECTRICITY', 'Tablet Sale', 'Best prices on tablets', '2024-09-05', '2024-09-20', 40, 299.99, 'tablet.jpg');
 
