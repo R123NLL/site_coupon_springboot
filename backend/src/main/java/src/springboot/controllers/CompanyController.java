@@ -45,7 +45,7 @@ public class CompanyController extends ClientController{
         return companyService.updateCoupon(coupon);
     }
 
-    @DeleteMapping("/{couponId}")
+    @DeleteMapping("/coupons/{couponId}")
     public void deleteCoupon(@PathVariable Long couponId) throws UnAuthorizedException {
         companyService.deleteCoupon(couponId);
     }
