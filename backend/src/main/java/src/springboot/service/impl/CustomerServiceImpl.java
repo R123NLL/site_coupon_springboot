@@ -16,6 +16,7 @@ import src.springboot.service.CustomerService;
 
 
 import java.util.List;
+import java.util.Objects;
 
 import static java.util.Objects.nonNull;
 
@@ -60,7 +61,7 @@ public class CustomerServiceImpl extends ClientService implements CustomerServic
 
     @Override
     public void purchaseCoupon(Long customerId, Long couponId) throws UnAuthorizedException {
-        notLoggedIn();
+        notLoggedIn(customerId);
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
         Coupon coupon = couponRepository.findById(couponId)
@@ -72,32 +73,32 @@ public class CustomerServiceImpl extends ClientService implements CustomerServic
 
     @Override
     public List<Coupon> getCustomerCoupons(Long customerId) throws UnAuthorizedException {
-        notLoggedIn();
+        notLoggedIn(customerId);
         return couponRepository.findByCustomersId(customerId);
 
     }
 
     @Override
     public List<Coupon> getCustomerCoupons(Long customerId, Category category) throws UnAuthorizedException {
-        notLoggedIn();
+        notLoggedIn(customerId);
         return couponRepository.findByCustomersIdAndCategory(customerId, category);
     }
 
     @Override
     public List<Coupon> getCustomerCoupons(Long customerId, double maxPrice) throws UnAuthorizedException {
-        notLoggedIn();
+        notLoggedIn(customerId);
         return couponRepository.findByCustomersIdAndPriceLessThanEqual(customerId, maxPrice);
     }
 
     @Override
     public Customer getCustomerDetails(Long customerId) throws UnAuthorizedException {
-        notLoggedIn();
+        notLoggedIn(customerId);
         return customerRepository.findById(customerId)
                 .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
     }
 
-    private void notLoggedIn() throws UnAuthorizedException {
-        if (customerID <= 0) {
+    private void notLoggedIn(Long id) throws UnAuthorizedException {
+        if (!Objects.equals(customerID, id)) {
             throw new UnAuthorizedException("Access denied, please log in first!");
         }
     }

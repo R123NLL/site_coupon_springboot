@@ -4,7 +4,7 @@ import { clientTypes, submit, validateLoginForm } from './LoginFunctions';
 import './LoginComponent.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '../../state/auth/authSlice';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export default function LoginComponent() {
 
@@ -14,12 +14,16 @@ export default function LoginComponent() {
         password: ""
     });
     const [isValid, setIsValid] = useState(false);
-
+    
+    const role = useSelector(state => state.auth.role);
+    
     const navigate = useNavigate();
-
     const dispatch = useDispatch();
-    const authCondition = useSelector(state => state.auth);
 
+    useEffect(() => {
+        if (role) navigate(`/${role}`);
+    }, [role])
+    
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setLoginData(prevState => ({
@@ -27,15 +31,12 @@ export default function LoginComponent() {
             [name]: value
         }));
     };
-
+    
     const handleFormSubmit = async (e) => {
         e.preventDefault();
         const token = await submit(loginData);
+        if(!token) return;
         dispatch(setUser(token));
-        
-        // TODO: remove it, this one only for test
-        // navigation to the protected route
-        navigate('/customer');
     }
 
     useEffect(() => {
