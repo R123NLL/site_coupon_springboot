@@ -39,7 +39,7 @@ function App() {
               < CompanyPage />
             </CheckRouteAccess>
           } />
-          <Route path='/manager' element={
+          <Route path='/administrator' element={
             <CheckRouteAccess role={roles.administrator}>
               < ManagerPage />
             </CheckRouteAccess>

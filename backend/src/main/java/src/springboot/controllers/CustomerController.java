@@ -47,7 +47,7 @@ public class CustomerController extends ClientController {
     public ResponseEntity<String> purchaseCoupon(@PathVariable Long customerId, @PathVariable Long couponId) {
         try {
             customerService.purchaseCoupon(customerId, couponId);
-            return ResponseEntity.ok("Coupon purchased succesfully");
+            return ResponseEntity.ok("Coupon purchased successfully");
         } catch (UnAuthorizedException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Unauthorized: " + e.getMessage());
         } catch (IllegalArgumentException e) {

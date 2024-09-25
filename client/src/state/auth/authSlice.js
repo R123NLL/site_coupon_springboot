@@ -19,8 +19,9 @@ const authSlice = createSlice({
 
                 const r = decodedToken.role.toLowerCase()
                 state.role = r;
-                state.id = decodedToken.id;
-                state.isAuthenticated = false;
+                state.id = decodedToken.userId;
+                state.isAuthenticated = true;
+                state.exp = decodedToken.exp;
                 state.token = token;
             } catch (error) {
                 console.error("Invalid token", error);
