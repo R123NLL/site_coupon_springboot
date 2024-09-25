@@ -55,6 +55,18 @@ public class CustomerController extends ClientController {
         }
     }
 
+    @DeleteMapping("/{customerId}/remove/{couponId}")
+    public ResponseEntity<String> removePurchasedCoupon(@PathVariable Long customerId, @PathVariable Long couponId) {
+        try {
+            customerService.removePurchasedCoupon(customerId, couponId);
+            return ResponseEntity.ok("Coupon removed successfully.");
+        } catch (UnAuthorizedException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Unauthorized: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
     @GetMapping("/{customerId}")
     public Customer getCustomerDetails(@PathVariable Long customerId) throws UnAuthorizedException {
         return customerService.getCustomerDetails(customerId);

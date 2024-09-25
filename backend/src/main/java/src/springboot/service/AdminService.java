@@ -1,6 +1,7 @@
 package src.springboot.service;
 
 import src.springboot.entities.Company;
+import src.springboot.entities.Coupon;
 import src.springboot.entities.Customer;
 import src.springboot.exceptions.UnAuthorizedException;
 
@@ -27,5 +28,7 @@ public interface AdminService {
     List<Customer> getAllCustomers() throws UnAuthorizedException;
 
     Customer getOneCustomer(Long customerId) throws UnAuthorizedException;
+
+    List<Coupon> getAllActiveCoupons();
 
 }

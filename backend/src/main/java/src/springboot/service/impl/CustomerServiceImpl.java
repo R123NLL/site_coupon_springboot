@@ -1,5 +1,6 @@
 package src.springboot.service.impl;
 
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,9 @@ import src.springboot.service.ClientService;
 import src.springboot.service.CustomerService;
 
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import static java.util.Objects.nonNull;
@@ -26,6 +29,7 @@ public class CustomerServiceImpl extends ClientService implements CustomerServic
 
     @Autowired
     private CustomerRepository customerRepository;
+
     private Long customerID;
     private static final Logger logger = LoggerFactory.getLogger(CustomerServiceImpl.class);
 
@@ -47,7 +51,7 @@ public class CustomerServiceImpl extends ClientService implements CustomerServic
             Customer customerByEmail = customerRepository.findByEmail(email);
             if (nonNull(customerByEmail)) {
                 customerID = customerByEmail.getId();
-                logger.info("Logged is successfully, Welcome back "+ customerByEmail.getFirstName());
+                logger.info("Logged is successfully, Welcome back " + customerByEmail.getFirstName());
                 return customerByEmail.getPassword().equals(password);
             }
         }
@@ -69,6 +73,22 @@ public class CustomerServiceImpl extends ClientService implements CustomerServic
 
         customer.getCoupons().add(coupon); //adding the coupon to the customer's list
         customerRepository.save(customer); //saving the updated customer
+    }
+
+    @Override
+    @Transactional
+    public void removePurchasedCoupon(Long customerId, Long couponId) throws UnAuthorizedException {
+        notLoggedIn(customerId);
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
+        Coupon coupon = couponRepository.findById(couponId)
+                .orElseThrow(() -> new IllegalArgumentException("Coupon not found"));
+
+        if (!customer.getCoupons().remove(coupon)) {
+            throw new IllegalArgumentException("Coupon not purchased by customer.");
+        }
+
+        customerRepository.save(customer);
     }
 
     @Override
@@ -102,7 +122,4 @@ public class CustomerServiceImpl extends ClientService implements CustomerServic
             throw new UnAuthorizedException("Access denied, please log in first!");
         }
     }
-
-
-
 }

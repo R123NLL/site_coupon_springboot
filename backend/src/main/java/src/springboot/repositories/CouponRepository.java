@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import src.springboot.entities.Category;
 import src.springboot.entities.Coupon;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -23,6 +24,8 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
     List<Coupon> findByCustomersIdAndCategory(Long customerId, Category category);
 
     List<Coupon> findByCustomersIdAndPriceLessThanEqual(Long customerId, double maxPrice);
+
+    List<Coupon> findByEndDateAfter(LocalDate endDate);
 
 
 }
