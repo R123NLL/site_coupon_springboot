@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import src.springboot.entities.ClientType;
 import src.springboot.exceptions.LoginSecurityException;
+import src.springboot.exceptions.UnAuthorizedException;
 import src.springboot.service.impl.AdminServiceImpl;
 import src.springboot.service.impl.CompanyServiceImpl;
 import src.springboot.service.impl.CustomerServiceImpl;

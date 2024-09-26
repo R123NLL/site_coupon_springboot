@@ -10,7 +10,7 @@ import src.springboot.exceptions.UnAuthorizedException;
 import java.util.List;
 
 public interface CompanyService {
-    List<Coupon> getCompanyCoupons(Long companyId);
+    List<Coupon> getCompanyCoupons(Long companyId) throws UnAuthorizedException;
 
     Coupon addCoupon(Coupon coupon) throws UnAuthorizedException;
 
@@ -22,6 +22,6 @@ public interface CompanyService {
 
     Company getCompanyDetails(Long companyID) throws UnAuthorizedException;
 
-    void deleteCoupon(Long couponId) throws UnAuthorizedException;
+    void deleteCoupon(Long couponId, Long id) throws UnAuthorizedException;
     Long getIdByEmail(String email) throws UnAuthorizedException;
 }

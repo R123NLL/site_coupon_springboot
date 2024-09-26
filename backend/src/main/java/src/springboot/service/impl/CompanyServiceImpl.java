@@ -17,6 +17,7 @@ import src.springboot.service.CompanyService;
 
 
 import java.util.List;
+import java.util.Objects;
 
 import static java.util.Objects.nonNull;
 
@@ -61,13 +62,13 @@ public class CompanyServiceImpl extends ClientService implements CompanyService 
         return false;
     }
 
-    public Long getIdByEmail(String email) {
+    public Long getIdByEmail(String email)  {
         return companyRepository.findByEmail(email).getId();
     }
 
     @Override
     public Coupon addCoupon(Coupon coupon) throws UnAuthorizedException {
-        notLoggedIn();
+        notLoggedIn(companyId);
 
         Company company = companyRepository.findById(coupon.getCompany().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Company not found"));
@@ -84,7 +85,7 @@ public class CompanyServiceImpl extends ClientService implements CompanyService 
 
     @Override
     public Coupon updateCoupon(Coupon updatedCoupon) throws UnAuthorizedException {
-        notLoggedIn();
+        notLoggedIn(companyId);
 
         Coupon existingCoupon = couponRepository.findById(updatedCoupon.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Coupon not found"));
@@ -112,8 +113,8 @@ public class CompanyServiceImpl extends ClientService implements CompanyService 
         return couponRepository.save(existingCoupon);
     }
 
-    public void deleteCoupon(Long couponId) throws UnAuthorizedException {
-        notLoggedIn();
+    public void deleteCoupon(Long companyId,Long couponId) throws UnAuthorizedException {
+        notLoggedIn(companyId);
 
         if (!couponRepository.existsById(couponId)) {
             throw new EntityNotFoundException("Coupon with ID " + couponId + " not found");
@@ -123,13 +124,14 @@ public class CompanyServiceImpl extends ClientService implements CompanyService 
     }
 
     @Override
-    public List<Coupon> getCompanyCoupons(Long companyId) {
+    public List<Coupon> getCompanyCoupons(Long companyId) throws UnAuthorizedException {
+        notLoggedIn(companyId);
         return couponRepository.findByCompanyId(companyId);
     }
 
     @Override
     public List<Coupon> getCompanyCoupons(Long companyId, Category category) throws UnAuthorizedException {
-        notLoggedIn();
+        notLoggedIn(companyId);
         List<Coupon> coupons = couponRepository.findByCompanyIdAndCategory(companyId, category);
 
         if (coupons.isEmpty()) {
@@ -141,7 +143,7 @@ public class CompanyServiceImpl extends ClientService implements CompanyService 
 
     @Override
     public List<Coupon> getCompanyCoupons(Long companyId, double maxPrice) throws UnAuthorizedException {
-        notLoggedIn();
+        notLoggedIn(companyId);
         List<Coupon> coupons = couponRepository.findByCompanyIdAndPriceLessThanEqual(companyId, maxPrice);
 
         if (coupons.isEmpty()) {
@@ -158,9 +160,9 @@ public class CompanyServiceImpl extends ClientService implements CompanyService 
     }
 
     // method to check authorization before using the other methods
-    private void notLoggedIn() throws UnAuthorizedException {
-        if (this.companyId <= 0) {
-            throw new UnAuthorizedException("Access denied, please log in!");
+    private void notLoggedIn(Long id) throws UnAuthorizedException {
+        if (!Objects.equals(companyId, id)) {
+            throw new UnAuthorizedException("Access denied, please log in first!");
         }
     }
 

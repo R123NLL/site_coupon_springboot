@@ -27,7 +27,7 @@ public class CompanyController extends ClientController{
         return super.login(newLoginRequest);
     }
     @GetMapping("/{companyId}/coupons")
-    public List<Coupon> getCompanyCoupons(@PathVariable Long companyId) {
+    public List<Coupon> getCompanyCoupons(@PathVariable Long companyId) throws UnAuthorizedException {
         return companyService.getCompanyCoupons(companyId);
     }
 
@@ -45,9 +45,9 @@ public class CompanyController extends ClientController{
         return companyService.updateCoupon(coupon);
     }
 
-    @DeleteMapping("/{couponId}")
-    public void deleteCoupon(@PathVariable Long couponId) throws UnAuthorizedException {
-        companyService.deleteCoupon(couponId);
+    @DeleteMapping("/{companyId}/coupons/{couponId}")
+    public void deleteCoupon(@PathVariable Long companyId,@PathVariable Long couponId) throws UnAuthorizedException {
+        companyService.deleteCoupon(companyId,couponId);
     }
 
     @GetMapping("/{companyId}/coupons/category/{category}")
