@@ -18,7 +18,7 @@ WORKDIR /app
 COPY --from=backend-builder /app/target/*.jar app.jar
 
 # Set environment variables (adjust as necessary)
-ENV SPRING_DATASOURCE_URL=jdbc:mysql://db:3307/site_coupons_springboot
+ENV SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/site_coupons_springboot
 ENV SPRING_DATASOURCE_USERNAME=root
 ENV SPRING_DATASOURCE_PASSWORD=12345678
 ENV SPRING_JPA_HIBERNATE_DDL_AUTO=update

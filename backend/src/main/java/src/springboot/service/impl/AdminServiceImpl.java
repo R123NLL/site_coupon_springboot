@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import src.springboot.entities.Coupon;
 import src.springboot.repositories.CompanyRepository;
 import src.springboot.repositories.CouponRepository;
 import src.springboot.repositories.CustomerRepository;
@@ -17,6 +18,7 @@ import src.springboot.service.ClientService;
 
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -156,6 +158,11 @@ public class AdminServiceImpl extends ClientService implements AdminService {
         notLoggedIn();
         return customerRepository.findById(customerId)
                 .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
+    }
+
+    public List<Coupon> getAllActiveCoupons(){
+        LocalDate today = LocalDate.now();
+        return couponRepository.findByEndDateAfter(today);
     }
 
     private void notLoggedIn() throws UnAuthorizedException {
