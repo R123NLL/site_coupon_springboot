@@ -155,6 +155,7 @@ public class CompanyServiceImpl extends ClientService implements CompanyService 
 
     @Override
     public Company getCompanyDetails(Long companyID) throws UnAuthorizedException {
+        notLoggedIn(companyID);
         return companyRepository.findById(companyID)
                 .orElseThrow(() -> new EntityNotFoundException("Company not found"));
     }

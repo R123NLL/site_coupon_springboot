@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import src.springboot.dto.NewCompanyRequest;
 import src.springboot.dto.NewCustomerRequest;
 import src.springboot.dto.NewLoginRequest;
-import src.springboot.entities.ClientType;
 import src.springboot.entities.Company;
 import src.springboot.entities.Customer;
 import src.springboot.exceptions.UnAuthorizedException;
@@ -22,6 +21,9 @@ public class AdminController extends ClientController {
     @Autowired
     private AdminService adminService;
 
+    @Autowired
+    private Mapper mapper;
+
     @Override
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody NewLoginRequest newLoginRequest) {
@@ -30,14 +32,14 @@ public class AdminController extends ClientController {
 
     @PostMapping("/companies")
     public Company addCompany(@RequestBody NewCompanyRequest newCompanyRequest) throws UnAuthorizedException {
-        Company company = Mapper.mapToCompany(newCompanyRequest);
+        Company company =  mapper.mapToCompany(newCompanyRequest);
 
         return adminService.addCompany(company);
     }
 
     @PutMapping("/companies")
     public Company updateCompany(@RequestBody NewCompanyRequest newCompanyRequest) throws UnAuthorizedException {
-        Company company = Mapper.mapToCompany(newCompanyRequest);
+        Company company = mapper.mapToCompany(newCompanyRequest);
 
         return adminService.updateCompany(company);
     }
@@ -60,14 +62,14 @@ public class AdminController extends ClientController {
 
     @PostMapping("/customers")
     public Customer addCustomer(@RequestBody NewCustomerRequest newCustomerRequest) throws UnAuthorizedException {
-        Customer customer = Mapper.mapToCustomer(newCustomerRequest);
+        Customer customer = mapper.mapToCustomer(newCustomerRequest);
 
         return adminService.addCustomer(customer);
     }
 
     @PutMapping("/customers")
     public Customer updateCustomer(@RequestBody NewCustomerRequest newCustomerRequest) throws UnAuthorizedException {
-        Customer customer = Mapper.mapToCustomer(newCustomerRequest);
+        Customer customer = mapper.mapToCustomer(newCustomerRequest);
 
         return adminService.updateCustomer(customer);
     }

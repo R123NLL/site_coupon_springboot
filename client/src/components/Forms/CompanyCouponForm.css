@@ -1,0 +1,9 @@
+.background {
+    background-image: url('C:\Users\Denis\Desktop\Java\site_coupon_springboot\client\public\images\CompanyPage.png'); /* Corrected image path */
+    background-size: cover; /* Make the image cover the whole container */
+    background-position: center; /* Center the image */
+    padding: 20px;
+    border-radius: 8px; /* Optional for rounded corners */
+    min-height: 100vh; /* Make it cover the full height */
+    color: white; /* Optional: change text color for better contrast */
+}
