@@ -3,7 +3,7 @@ package src.springboot.entities;
 public enum Category {
     FOOD(1),
     ELECTRICITY(2),
-    RESTAURANT(3),
+    CLOTHING(3),
     VACATION(4);
 
     private final int categoryId;
