@@ -1,19 +1,28 @@
 import React, { useState } from "react";
 
-export default function FilterComponent() {
+export default function FilterComponent(props) {
 
     const [selectedOption, setSelectedOption] = useState('');
 
     const handleOptionChange = (event) => {
-        console.log(event.target);
-        console.log(selectedOption);
         setSelectedOption(event.target.value);
-        console.log(selectedOption);
-        
     };
 
     const updateFilter = (event) => {
-        //console.log(`${selectedOption}/${event.target.value}`);
+        if(event.target.value) {
+            const value = event.target.value;
+            const filter = {
+                filterBy: selectedOption,
+                filterValue: isNaN(value) ? value : +value
+            }
+            if(typeof props.getFilter === 'function')
+                props.getFilter(filter);
+        }
+    }
+
+    const resetFilter = () => {
+        if(typeof props.getFilter === 'function')
+            props.getFilter({});
     }
 
     return (
@@ -44,9 +53,18 @@ export default function FilterComponent() {
                     Max Price
                 </label>
             </div>
-            {
-                selectedOption === 'price' && <input type="number" name="price" onChange={updateFilter} />
-            }
+            <>
+                {selectedOption === 'price' && <input type="number" name="price" onChange={updateFilter} />}
+                {selectedOption === 'category' && 
+                    <select name="categorySelect" id="categorySelect" onChange={updateFilter}>
+                    <option value="" defaultValue>Select category</option>
+                    <option value="food">Food</option>
+                    <option value="electricity">Electricity</option>
+                    <option value="clothing">Clothing</option>
+                    <option value="vacation">Vacation</option>
+                  </select>}
+                  {<button type="button" className="btn btn-sm btn-secondary ms-2" onClick={resetFilter}>clear</button>}
+            </>
         </div>
     );
 }
