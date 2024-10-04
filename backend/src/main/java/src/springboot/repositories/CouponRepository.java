@@ -25,7 +25,6 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
 
     List<Coupon> findByCustomersIdAndPriceLessThanEqual(Long customerId, double maxPrice);
 
-    List<Coupon> findByEndDateAfter(LocalDate endDate);
-
+    List<Coupon>  findByStartDateLessThanEqualAndEndDateGreaterThanAndAmountGreaterThan(LocalDate currentDate, LocalDate currentDateAgain, int amount);
 
 }

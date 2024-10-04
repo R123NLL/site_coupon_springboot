@@ -162,7 +162,7 @@ public class AdminServiceImpl extends ClientService implements AdminService {
 
     public List<Coupon> getAllActiveCoupons(){
         LocalDate today = LocalDate.now();
-        return couponRepository.findByEndDateAfter(today);
+        return couponRepository.findByStartDateLessThanEqualAndEndDateGreaterThanAndAmountGreaterThan(today,today,0);
     }
 
     private void notLoggedIn() throws UnAuthorizedException {
