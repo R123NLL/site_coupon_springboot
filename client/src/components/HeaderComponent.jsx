@@ -1,11 +1,10 @@
 import React from "react";
+import NavbarComponent from "./Navbar/NavbarComponent";
 
-export default function HeaderComponent(){
+export default function HeaderComponent() {
     return (
-        <div className="container">
-            <div className="text-center">
-                Header component
-            </div>
+        <div className="text-center">
+            <NavbarComponent />
         </div>
     );
 }
