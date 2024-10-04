@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Button, Form, Table } from 'react-bootstrap';
+import { Button, Container, Form, Table } from 'react-bootstrap';
 import axios from 'axios';
-import './CompanyCouponForm.css'; 
+
+
 
 const CompanyCouponForm = ({ companyId, companyName, coupons, setCoupons }) => {
     const [newCouponData, setNewCouponData] = useState({
@@ -35,7 +36,7 @@ const CompanyCouponForm = ({ companyId, companyName, coupons, setCoupons }) => {
     };
 
     return (
-        <div className="background">
+        <Container> 
             <h1>{companyName}</h1>
             <br />
             <h2>Current Coupons</h2>
@@ -69,7 +70,7 @@ const CompanyCouponForm = ({ companyId, companyName, coupons, setCoupons }) => {
                     ))}
                 </tbody>
             </Table>
-        </div>
+            </Container>
     );
 };
 

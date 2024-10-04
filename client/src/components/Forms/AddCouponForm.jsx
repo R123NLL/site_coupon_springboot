@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 import axios from 'axios';
 
+
 const AddCouponForm = ({ companyId, onCouponAdded }) => {
     const [newCouponData, setNewCouponData] = useState({
         title: '',
@@ -60,7 +61,7 @@ const AddCouponForm = ({ companyId, onCouponAdded }) => {
 
     return (
         <>
-            <Button variant="primary" onClick={handleShow}>
+            <Button style={{marginLeft:'12px'}} variant="primary" onClick={handleShow}>
                 Add New Coupon
             </Button>
 

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useSelector } from 'react-redux'; // Assuming you're using Redux for companyId
-import AddCouponForm from '../components/Forms/AddCouponForm'; // Import the new component
-import CompanyCouponForm from '../components/Forms/CompanyCouponForm'; // Import the CompanyCouponForm
+import { useSelector } from 'react-redux'; 
+import AddCouponForm from '../components/Forms/AddCouponForm'; 
+import CompanyCouponForm from '../components/Forms/CompanyCouponForm'; 
 import { Table, Container, Row, Col } from 'react-bootstrap';
+import '../components/Forms/CompanyCouponForm.css'; 
 
 export default function CompanyPage() {
     const companyId = useSelector(store => store.auth.id); 
@@ -27,6 +28,7 @@ export default function CompanyPage() {
     }, [companyId]);
 
     return (
+        <div className="background">
         <Container>
             <Row>
                 <Col>
@@ -40,7 +42,6 @@ export default function CompanyPage() {
             </Row>
             <Row>
                 <Col>
-                    <h2>Add New Coupon</h2>
                     <AddCouponForm 
                         companyId={companyId} 
                         onCouponAdded={(newCoupon) => setCoupons([...coupons, newCoupon])} 
@@ -48,5 +49,6 @@ export default function CompanyPage() {
                 </Col>
             </Row>
         </Container>
+        </div>
     );
 }
