@@ -1,0 +1,9 @@
+.background {
+    background-image: url('https://i.pinimg.com/originals/22/f0/7c/22f07c59344a599d2648d3e4e97ef4c5.jpg'); /* Corrected image path */
+    background-size: cover; /* Make the image cover the whole container */
+    background-position: center; /* Center the image */
+    padding: 20px;
+    border-radius: 10px; /* Optional for rounded corners */
+    min-height: 100vh; /* Make it cover the full height */
+    color: rgb(255, 255, 255); /* Optional: change text color for better contrast */
+}
