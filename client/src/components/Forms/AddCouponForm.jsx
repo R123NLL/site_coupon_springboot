@@ -1,19 +1,11 @@
 import React, { useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 import axios from 'axios';
-
+import useCouponInitialState from '../../state/CouponInitialState';
 
 const AddCouponForm = ({ companyId, onCouponAdded }) => {
-    const [newCouponData, setNewCouponData] = useState({
-        title: '',
-        description: '',
-        category: 'FOOD', // Default category
-        price: '',
-        amount: '',
-        startDate: '',
-        endDate: '',
-        image: ''
-    });
+    const { newCouponData, setNewCouponData } = useCouponInitialState(); // Use the custom hook for state
+
     const [showModal, setShowModal] = useState(false); // State to manage modal visibility
 
     const handleAdding = () => {
@@ -101,7 +93,7 @@ const AddCouponForm = ({ companyId, onCouponAdded }) => {
                             >
                                 <option value="FOOD">FOOD</option>
                                 <option value="ELECTRICITY">ELECTRICITY</option>
-                                <option value="RESTAURANT">RESTAURANT</option>
+                                <option value="CLOTHING">CLOTHING</option>
                                 <option value="VACATION">VACATION</option>
                             </Form.Control>
                         </Form.Group>
