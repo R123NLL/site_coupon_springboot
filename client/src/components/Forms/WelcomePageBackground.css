@@ -1,0 +1,9 @@
+.welcomePageBackground {
+    background-image: url('https://www.ceotodaymagazine.com/CEO-Today/wp-content/uploads/2022/06/%E2%80%8B6-Tips-To-Start-An-eCommerce-Business.jpg');
+    background-size: cover; /* Make the image cover the whole container */
+    background-position: center; /* Center the image */
+    padding: 20px;
+    border-radius: 10px; /* Optional for rounded corners */
+    min-height: 100vh; /* Make it cover the full height */
+    color:rgb(0, 0, 0); /* Optional: change text color for better contrast */
+}

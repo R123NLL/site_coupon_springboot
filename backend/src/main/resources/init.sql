@@ -19,12 +19,12 @@ CREATE TABLE IF NOT EXISTS site_coupons_springboot.companies (
 CREATE TABLE IF NOT EXISTS site_coupons_springboot.coupons (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     company_id BIGINT,
-    category VARCHAR(255),  -- Assuming Category is an ENUM type
+    category VARCHAR(40),  -- Assuming Category is an ENUM type
     title VARCHAR(40) NOT NULL,
     description VARCHAR(40) NOT NULL,
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
-    amount INT NOT NULL,
+    amount INT NOT NULL CHECK (amount >= 0),
     price DOUBLE NOT NULL,
     image VARCHAR(40) NOT NULL,
     FOREIGN KEY (company_id) REFERENCES site_coupons_springboot.companies(id) ON DELETE CASCADE
@@ -58,16 +58,16 @@ INSERT INTO site_coupons_springboot.customers (first_name, last_name, customer_e
 
 -- Inserting data into coupons
 INSERT INTO site_coupons_springboot.coupons (company_id, category, title, description, start_date, end_date, amount, price, image) VALUES
-    (1, 'ELECTRICITY', 'Discount on Laptops', 'Get 20% off', '2024-09-01', '2024-09-30', 100, 299.99, 'laptop.jpg'),
-    (1, 'ELECTRICITY', '50% off Headphones', 'Best audio experience', '2024-09-15', '2024-09-25', 50, 49.99, 'headphones.jpg'),
-    (2, 'FOOD', '10% off all meals', 'Delicious meals at a discount', '2024-09-01', '2024-09-10', 200, 19.99, 'meals.jpg'),
-    (2, 'FOOD', 'Free Dessert', 'Get a free dessert with every meal', '2024-09-05', '2024-09-15', 100, 0.00, 'dessert.jpg'),
+    (1, 'ELECTRICITY', 'Discount on Laptops', 'Get 20% off', '2024-09-01', '2024-10-30', 100, 299.99, 'laptop.jpg'),
+    (1, 'ELECTRICITY', '50% off Headphones', 'Best audio experience', '2024-09-15', '2024-10-25', 50, 49.99, 'headphones.jpg'),
+    (2, 'FOOD', '10% off all meals', 'Delicious meals at a discount', '2024-09-01', '2024-10-10', 200, 19.99, 'meals.jpg'),
+    (2, 'FOOD', 'Free Dessert', 'Get a free dessert with every meal', '2024-09-05', '2024-10-15', 100, 0.00, 'dessert.jpg'),
     (3, 'VACATION', 'Flight Discounts', 'Save big on flights', '2024-09-01', '2024-10-01', 50, 399.99, 'flight.jpg'),
-    (3, 'VACATION', 'Hotel Stay Offers', '50% off hotel stays', '2024-09-15', '2024-09-30', 20, 199.99, 'hotel.jpg'),
-    (4, 'CLOTHING', 'Summer Collection Sale', 'Up to 70% off', '2024-09-01', '2024-09-20', 300, 49.99, 'clothes.jpg'),
-    (4, 'CLOTHING', 'Shoes Discount', 'Buy one get one free', '2024-09-10', '2024-09-30', 100, 79.99, 'shoes.jpg'),
-    (5, 'ELECTRICITY', '50% off Smartphones', 'Latest smartphones on sale', '2024-09-01', '2024-09-25', 75, 599.99, 'smartphone.jpg'),
-    (5, 'ELECTRICITY', 'Tablet Sale', 'Best prices on tablets', '2024-09-05', '2024-09-20', 40, 299.99, 'tablet.jpg');
+    (3, 'VACATION', 'Hotel Stay Offers', '50% off hotel stays', '2024-09-15', '2024-10-30', 20, 199.99, 'hotel.jpg'),
+    (4, 'CLOTHING', 'Summer Collection Sale', 'Up to 70% off', '2024-09-01', '2024-10-20', 300, 49.99, 'clothes.jpg'),
+    (4, 'CLOTHING', 'Shoes Discount', 'Buy one get one free', '2024-09-10', '2024-10-30', 100, 79.99, 'shoes.jpg'),
+    (5, 'ELECTRICITY', '50% off Smartphones', 'Latest smartphones on sale', '2024-10-01', '2024-09-25', 75, 599.99, 'smartphone.jpg'),
+    (5, 'ELECTRICITY', 'Tablet Sale', 'Best prices on tablets', '2024-09-05', '2024-10-20', 40, 299.99, 'tablet.jpg');
 
 -- Assigning coupons to customers in customers_vs_coupons table
 INSERT INTO site_coupons_springboot.customers_vs_coupons (customer_id, coupon_id) VALUES
