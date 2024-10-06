@@ -4,19 +4,32 @@ import axios from 'axios';
 import useCouponInitialState from '../../state/CouponInitialState';
 
 const AddCouponForm = ({ companyId, onCouponAdded }) => {
-    const { newCouponData, setNewCouponData } = useCouponInitialState(); // Use the custom hook for state
+    const { newCouponData, setNewCouponData } = useCouponInitialState();
+    const [showModal, setShowModal] = useState(false); 
 
-    const [showModal, setShowModal] = useState(false); // State to manage modal visibility
-
-    const handleAdding = () => {
+    // Function to check if the coupon already exists
+    const checkCouponExists = async (title) => {
         const apiUrl = process.env.REACT_APP_API_URL;
-        console.log("Company ID:", companyId); // Log the companyId
-        console.log("Coupon Data:", newCouponData); // Log the coupon data
-    
+        try {
+            const response = await axios.get(`${apiUrl}/api/v1/companies/${companyId}/coupons`); // Fetch existing coupons
+            return response.data.some(coupon => coupon.title === title); // Check if the title exists
+        } catch (error) {
+            console.error('Error fetching existing coupons:', error);
+            return false; // In case of an error, assume the coupon does not exist
+        }
+    };
+
+    const handleAdding = async () => {
+        const titleExists = await checkCouponExists(newCouponData.title);
+        if (titleExists) {
+            alert("This coupon already exists. Please use a different title."); // Alert if the coupon already exists
+            return;
+        }
+
+        const apiUrl = process.env.REACT_APP_API_URL;
         const requestUrl = `${apiUrl}/api/v1/companies/${companyId}/coupons`;
-        console.log("Request URL:", requestUrl); // Log the constructed URL
-    
-        axios.post(requestUrl,newCouponData)
+
+        axios.post(requestUrl, newCouponData)
             .then(response => {
                 const newCoupon = response.data;
                 onCouponAdded(newCoupon);
@@ -37,7 +50,6 @@ const AddCouponForm = ({ companyId, onCouponAdded }) => {
             });
     };
 
-    // Function to handle form input changes
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setNewCouponData({ ...newCouponData, [name]: value });
@@ -53,7 +65,7 @@ const AddCouponForm = ({ companyId, onCouponAdded }) => {
 
     return (
         <>
-            <Button style={{marginLeft:'12px'}} variant="primary" onClick={handleShow}>
+            <Button style={{ marginLeft: '12px' }} variant="primary" onClick={handleShow}>
                 Add New Coupon
             </Button>
 

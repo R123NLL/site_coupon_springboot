@@ -1,9 +1,11 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import CouponComponent from "../components/Coupon/CouponComponent";
-import FilterComponent from "../components/Filter/FilterComponent";
 import { useNavigate } from "react-router-dom"; 
+import WelcomeHeader from "../components/WelcomHeader.js"
+import FilterComponent from "../components/Filter/FilterComponent";
+import CouponList from "../components/Coupon/CouponList";
+import { Modal, Button } from 'react-bootstrap'; // Import Modal and Button from react-bootstrap
 import '../components/Forms/WelcomePageBackground.css'; 
 
 export default function WelcomePage() {
@@ -11,12 +13,13 @@ export default function WelcomePage() {
     const [couponList, setCouponList] = useState([]);
     const [filteredCoupons, setFilteredCoupons] = useState([]);
     const [filter, setFilter] = useState({});
+    const [showThankYou, setShowThankYou] = useState(false); // State for the modal
     const navigate = useNavigate(); 
 
     const fetchData = async () => {
         try {
             const apiUrl = process.env.REACT_APP_API_URL;
-            const response = await axios.get(`${apiUrl}/coupons/active`); // Fetch all available coupons
+            const response = await axios.get(`${apiUrl}/coupons/active`);
             setCouponList(response.data);
             setFilteredCoupons(response.data);
         } catch (error) {
@@ -24,36 +27,30 @@ export default function WelcomePage() {
         }
     }
 
-    // Function to handle coupon purchase
-    const handlePurchase = async (coupon) => {
+    const handlePurchase = async (coupon, quantity) => {
         if (!userId) {
-            // If not logged in, redirect to login page
             navigate("/login"); 
             return;
         }
 
         try {
             const apiUrl = process.env.REACT_APP_API_URL;
-            await axios.post(`${apiUrl}/api/v1/customers/${userId}/purchase/${coupon.id}`); // Correct API endpoint for purchasing a coupon
-            // Fetch updated coupon list after successful purchase
+            await axios.post(`${apiUrl}/api/v1/customers/${userId}/purchase/${coupon.id}/${quantity}`);
+            setShowThankYou(true); // Show the thank you modal on successful purchase
             fetchData();
         } catch (error) {
             console.error("Error purchasing coupon:", error);
         }
     }
 
-    // Fetch coupons on load
     useEffect(() => {
         fetchData();
     }, []);
 
-    // Apply filter
     useEffect(() => {
-        // If filter object is empty
         if (Object.entries(filter).length === 0) {
-            setFilteredCoupons([...couponList]); // Use spread "..." to create a new array
+            setFilteredCoupons([...couponList]); 
         } else {
-            // Apply filters
             const temp = couponList.filter(coupon => {
                 if (filter.filterBy === 'category') {
                     return coupon.category.toLowerCase() === filter.filterValue.toLowerCase();
@@ -61,29 +58,32 @@ export default function WelcomePage() {
                 if (filter.filterBy === 'price') {
                     return coupon.price <= filter.filterValue;
                 }
-                return true; // If no valid filter, include all
+                return true;
             });
             setFilteredCoupons(temp);
         }
     }, [filter, couponList]);
 
+    const handleClose = () => setShowThankYou(false); // Function to close the modal
+
     return (
         <div className="welcomePageBackground">
-            <h1 className="text-center">Available Coupons</h1>
-            <FilterComponent getFilter={setFilter} />
-            <div className="container d-flex justify-content-evenly flex-wrap">
-                {
-                    filteredCoupons.map(c => (
-                        <CouponComponent 
-                            key={c.id} 
-                            btnClass={"primary"} // Button class
-                            btnText={"Buy Now"} // Button text for purchasing the coupon
-                            onClick={() => handlePurchase(c)} // Handle purchase
-                            coupon={c} 
-                        />
-                    ))
-                }
-            </div>
+            <WelcomeHeader />
+            <FilterComponent setFilter={setFilter} />
+            <CouponList coupons={filteredCoupons} handlePurchase={handlePurchase} />
+
+            {/* Thank You Modal */}
+            <Modal show={showThankYou} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Thank You!</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>Thank you for buying the coupon!</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 }
