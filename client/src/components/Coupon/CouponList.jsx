@@ -1,16 +1,16 @@
 import React from 'react';
 import CouponComponent from './CouponComponent';
 
-const CouponList = ({ coupons, handlePurchase }) => {
+const CouponList = ({ coupons, onClickFunction, btnClass = "primary", btnText = "Buy Now" }) => { // Added props with default values
     return (
         <div className="container d-flex justify-content-evenly flex-wrap">
             {
                 coupons.map(c => (
                     <CouponComponent 
                         key={c.id} 
-                        btnClass={"primary"}
-                        btnText={"Buy Now"}
-                        onClick={(coupon, quantity) => handlePurchase(coupon, quantity)}
+                        btnClass={btnClass} // Pass btnClass prop
+                        btnText={btnText} // Pass btnText prop
+                        onClick={(coupon, quantity) => onClickFunction(coupon, quantity)} 
                         coupon={c} 
                     />
                 ))

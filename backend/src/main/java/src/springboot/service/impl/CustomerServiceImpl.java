@@ -71,21 +71,35 @@ public class CustomerServiceImpl extends ClientService implements CustomerServic
     public void purchaseCoupon(Long customerId, Long couponId, int quantity) throws UnAuthorizedException {
         notLoggedIn(customerId);
 
+        // Check if the customer exists
         Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Customer not found with ID: " + customerId));
 
+        // Check if the coupon exists
         Coupon coupon = couponRepository.findById(couponId)
-                .orElseThrow(() -> new IllegalArgumentException("Coupon not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Coupon not found with ID: " + couponId));
 
+        // Check if enough coupons are available for purchase
         if (coupon.getAmount() < quantity) {
-            throw new InsufficientCouponsQuantityException("Not enough coupons available");
+            throw new InsufficientCouponsQuantityException("Not enough coupons available for coupon ID: " + couponId);
         }
 
+        // Deduct the purchased quantity from the coupon's available amount
         coupon.setAmount(coupon.getAmount() - quantity);
 
-        customerRepository.save(customer);
-        couponRepository.save(coupon);
+        try {
+            // Save the updated coupon back to the repository
+            couponRepository.save(coupon);
+
+            //add the coupon to the customer and save the updated customer
+            customer.getCoupons().add(coupon);
+            customerRepository.save(customer);
+
+        } catch (Exception e) {
+            throw new RuntimeException("The purchase of the coupon failed due to a change at the same time: " + e.getMessage());
+        }
     }
+
 
     @Override
     @Transactional

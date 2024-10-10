@@ -2,10 +2,9 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom"; 
-import WelcomeHeader from "../components/WelcomHeader.js"
 import FilterComponent from "../components/Filter/FilterComponent";
 import CouponList from "../components/Coupon/CouponList";
-import { Modal, Button } from 'react-bootstrap'; // Import Modal and Button from react-bootstrap
+import { Modal, Button } from 'react-bootstrap'; 
 import '../components/Forms/WelcomePageBackground.css'; 
 
 export default function WelcomePage() {
@@ -13,7 +12,7 @@ export default function WelcomePage() {
     const [couponList, setCouponList] = useState([]);
     const [filteredCoupons, setFilteredCoupons] = useState([]);
     const [filter, setFilter] = useState({});
-    const [showThankYou, setShowThankYou] = useState(false); // State for the modal
+    const [showThankYou, setShowThankYou] = useState(false); 
     const navigate = useNavigate(); 
 
     const fetchData = async () => {
@@ -27,7 +26,7 @@ export default function WelcomePage() {
         }
     }
 
-    const handlePurchase = async (coupon, quantity) => {
+    const onClickFunction = async (coupon, quantity) => { // Updated method name
         if (!userId) {
             navigate("/login"); 
             return;
@@ -68,9 +67,14 @@ export default function WelcomePage() {
 
     return (
         <div className="welcomePageBackground">
-            <WelcomeHeader />
+            <h1 className="text-center">Available Coupons</h1>
             <FilterComponent setFilter={setFilter} />
-            <CouponList coupons={filteredCoupons} handlePurchase={handlePurchase} />
+                <CouponList 
+                        coupons={filteredCoupons} 
+                        onClickFunction={onClickFunction} 
+                        btnClass="success" 
+                        btnText="Purchase" 
+                />
 
             {/* Thank You Modal */}
             <Modal show={showThankYou} onHide={handleClose}>
