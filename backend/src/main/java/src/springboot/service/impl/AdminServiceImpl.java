@@ -57,12 +57,18 @@ public class AdminServiceImpl extends ClientService implements AdminService {
     public Company addCompany(Company company) throws UnAuthorizedException {
         notLoggedIn();
 
-        boolean companyExists = companyRepository.existsByEmailAndPassword(company.getEmail(),company.getPassword());
+        boolean companyExistsByName = companyRepository.existsByName(company.getName());
+        boolean companyExistsByEmail = companyRepository.existsByEmailAndPassword(company.getEmail(),company.getPassword());
 
-        if (companyExists) {
-            throw new IllegalArgumentException("Company with the name " + company.getName() +
-                    " is already exists");
+        if (companyExistsByName){
+            throw new IllegalArgumentException(company.getName()+" is already exists!");
         }
+
+        if (companyExistsByEmail) {
+            throw new IllegalArgumentException("The email :"+company.getEmail()+" is already registered try another!"
+                    );
+        }
+
         return companyRepository.save(company);
     }
 
