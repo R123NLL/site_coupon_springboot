@@ -9,6 +9,7 @@ import src.springboot.entities.Category;
 import src.springboot.entities.ClientType;
 import src.springboot.entities.Coupon;
 import src.springboot.entities.Customer;
+import src.springboot.exceptions.InsufficientCouponsQuantityException;
 import src.springboot.exceptions.UnAuthorizedException;
 import src.springboot.service.CustomerService;
 
@@ -43,15 +44,17 @@ public class CustomerController extends ClientController {
         return customerService.getCustomerCoupons(customerId, maxPrice);
     }
 
-    @PostMapping("/{customerId}/purchase/{couponId}")
-    public ResponseEntity<String> purchaseCoupon(@PathVariable Long customerId, @PathVariable Long couponId) {
+    @PostMapping("/{customerId}/purchase/{couponId}/{quantity}")
+    public ResponseEntity<String> purchaseCoupon(@PathVariable Long customerId, @PathVariable Long couponId, @PathVariable int quantity) {
         try {
-            customerService.purchaseCoupon(customerId, couponId);
-            return ResponseEntity.ok("Coupon purchased successfully");
+            customerService.purchaseCoupon(customerId, couponId, quantity); // Pass quantity to service
+            return ResponseEntity.ok("Coupons purchased successfully");
         } catch (UnAuthorizedException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Unauthorized: " + e.getMessage());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (InsufficientCouponsQuantityException e) { // Custom exception
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Not enough coupons available");
         }
     }
 
