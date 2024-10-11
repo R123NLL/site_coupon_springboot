@@ -4,6 +4,9 @@ import { useSelector } from 'react-redux';
 import { Container, Row, Col } from 'react-bootstrap';
 import ManagerCompanyForm from '../components/Forms/ManagerCompanyForm';
 import AddCompanyForm from '../components/Forms/AddCompanyForm';
+import '../components/Forms/ManagerCompanyForm.css'; 
+
+
 
 export default function ManagerPage() {
     const companyId = useSelector(store => store.auth.id); 
@@ -28,6 +31,7 @@ export default function ManagerPage() {
     }, [companyId]);
 
     return (
+        <div className="managerBackground">
         <Container>
             <Row>
                 <Col>
@@ -46,5 +50,6 @@ export default function ManagerPage() {
                 </Col>
             </Row>
         </Container>
+        </div>
     );
 }

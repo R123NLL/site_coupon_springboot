@@ -37,8 +37,8 @@ public class AdminController extends ClientController {
         return adminService.addCompany(company);
     }
 
-    @PutMapping("/companies")
-    public Company updateCompany(@RequestBody NewCompanyRequest newCompanyRequest) throws UnAuthorizedException {
+    @PutMapping("/companies/{companyId}")
+    public Company updateCompany(@PathVariable Long companyId ,@RequestBody NewCompanyRequest newCompanyRequest) throws UnAuthorizedException {
         Company company = mapper.mapToCompany(newCompanyRequest);
 
         return adminService.updateCompany(company);

@@ -1,0 +1,9 @@
+.managerBackground {
+    background-image: url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); /* Corrected image path */
+    background-size: cover; /* Make the image cover the whole container */
+    background-position: center; /* Center the image */
+    padding: 20px;
+    border-radius: 10px; /* Optional for rounded corners */
+    min-height: 100vh; /* Make it cover the full height */
+    color: rgb(255, 255, 255); /* Optional: change text color for better contrast */
+}
