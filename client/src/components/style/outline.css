@@ -1,0 +1,21 @@
+h1 {
+    color: rgb(255, 255, 255); /* Change this to your desired text color */
+    text-shadow: 
+        -1px -1px 0 rgb(0, 0, 0),
+        1px -1px 0 black,
+        -1px 1px 0 black,
+        1px 1px 0 black; /* Black outline */
+    font-size: 3em; /* Adjust font size as needed */
+    font-weight: bold; /* Make the text bold for better visibility */
+}
+
+h2 {
+    color: rgb(255, 255, 255); /* Change this to your desired text color */
+    text-shadow: 
+        -1px -1px 0 rgb(0, 0, 0),
+        1px -1px 0 black,
+        -1px 1px 0 black,
+        1px 1px 0 rgb(0, 0, 0); /* Black outline */
+    font-size: 2em; /* Adjust font size as needed */
+    font-weight: light; /* Make the text bold for better visibility */
+}

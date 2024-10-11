@@ -79,13 +79,39 @@ public class AdminServiceImpl extends ClientService implements AdminService {
         Company existingCompany = companyRepository.findById(updatedCompany.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Company not found"));
 
-        existingCompany.setName(updatedCompany.getName());
-        existingCompany.setEmail(updatedCompany.getEmail());
-        existingCompany.setPassword(updatedCompany.getPassword());
-        existingCompany.setCoupons(updatedCompany.getCoupons());
+        // Check if name is taken by another company
+        if (updatedCompany.getName() != null && !updatedCompany.getName().isEmpty()) {
+            if (companyRepository.existsByName(updatedCompany.getName()) &&
+                    !existingCompany.getName().equals(updatedCompany.getName())) {
+                throw new IllegalArgumentException("Company name already exists");
+            }
+            existingCompany.setName(updatedCompany.getName());
+        }
+
+        // Check if email is taken by another company
+        if (updatedCompany.getEmail() != null && !updatedCompany.getEmail().isEmpty()) {
+            if (companyRepository.existsByEmail(updatedCompany.getEmail()) &&
+                    !existingCompany.getEmail().equals(updatedCompany.getEmail())) {
+                throw new IllegalArgumentException("Email already exists");
+            }
+            existingCompany.setEmail(updatedCompany.getEmail());
+        }
+
+        // Update password if provided
+        if (updatedCompany.getPassword() != null && !updatedCompany.getPassword().isEmpty()) {
+            existingCompany.setPassword(updatedCompany.getPassword());
+        }
+
+        // Update coupons if provided
+        if (updatedCompany.getCoupons() != null) {
+            existingCompany.getCoupons().clear();
+            existingCompany.getCoupons().addAll(updatedCompany.getCoupons());
+        }
 
         return companyRepository.save(existingCompany);
     }
+
+
 
     @Override
     @Transactional
@@ -114,7 +140,6 @@ public class AdminServiceImpl extends ClientService implements AdminService {
 
     @Override
     public Customer addCustomer(Customer customer) throws UnAuthorizedException {
-        notLoggedIn();
 
         boolean customerExists = customerRepository.existsCustomerByEmailAndPassword(customer.getEmail(), customer.getPassword());
 

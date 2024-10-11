@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
-import { Button, Container, Form, Table } from 'react-bootstrap';
+import { Button, Container,Table } from 'react-bootstrap';
 import axios from 'axios';
-import useCouponInitialState from '../Coupon/CouponInitialState';
+import useCouponInitialState from '../../Coupon/CouponInitialState';
 
 
 
 const CompanyCouponForm = ({ companyId, companyName, coupons, setCoupons }) => {
-    const [newCouponData, setNewCouponData] = useCouponInitialState();
+    const {newCouponData, setNewCouponData} = useCouponInitialState();
     const handleDelete = (id) => {
         const confirmDelete = window.confirm("Are you sure you want to delete this coupon?");
         if (confirmDelete) {

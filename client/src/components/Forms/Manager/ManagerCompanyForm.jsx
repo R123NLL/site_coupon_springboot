@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState} from 'react';
 import { Button, Container, Table, Modal, Form } from 'react-bootstrap';
 import axios from 'axios';
+import '../../style/outline.css';
 
 const ManagerCompanyForm = ({ companies, setCompanies }) => {
     const [showModifyModal, setShowModifyModal] = useState(false); // State for modal visibility
@@ -20,16 +21,34 @@ const ManagerCompanyForm = ({ companies, setCompanies }) => {
 
     // Handle saving the modified company
     const handleSaveChanges = () => {
-        axios.put(`${process.env.REACT_APP_API_URL}/api/v1/admin/companies/${selectedCompany.id}`, {
-            ...selectedCompany,
+        const nameExists = companies.some(company => 
+            company.id !== selectedCompany.id && company.name === updatedName
+        );
+
+        const emailExists = companies.some(company => 
+            company.id !== selectedCompany.id && company.email === updatedEmail
+        );
+
+        if (nameExists) {
+            alert("This company name already exists. Please use a different name.");
+            return;
+        }
+
+        if (emailExists) {
+            alert("This email already exists. Please use a different email.");
+            return;
+        }
+
+        axios.put(`${process.env.REACT_APP_API_URL}/api/v1/admin/companies`, {
+            companyId: selectedCompany.id,
             name: updatedName,
             email: updatedEmail,
-            password: updatedPassword // Include password change if provided
+            password: updatedPassword
         })
         .then(response => {
             setCompanies(companies.map(company => 
                 company.id === selectedCompany.id 
-                ? { ...company, name: updatedName } // Update name locally (email is not shown in table)
+                ? { ...company, name: updatedName, email: updatedEmail } // Update locally
                 : company
             ));
             setShowModifyModal(false); // Close modal
@@ -57,17 +76,19 @@ const ManagerCompanyForm = ({ companies, setCompanies }) => {
             <h1>Manage Companies</h1>
             <br />
             <h2>Current Companies</h2>
-            <Table striped bordered hover>
+            <Table striped bordered hover size="lg">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Action</th>
+                    <th className="text-left py-1 px-2">Name</th>
+                    <th className="text-left py-1 px-2">Email</th> 
+                    <th className="text-left py-1 px-2">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     {companies.map((company) => (
                         <tr key={company.id}>
                             <td>{company.name}</td>
+                            <td>{company.email}</td>
                             <td>
                                 <Button variant="primary" onClick={() => handleModify(company)}>Modify</Button>{' '}
                                 <Button variant="danger" onClick={() => handleDelete(company.id)}>Delete</Button>
@@ -77,10 +98,11 @@ const ManagerCompanyForm = ({ companies, setCompanies }) => {
                 </tbody>
             </Table>
 
+
             {/* Modal for Modifying Company */}
             <Modal show={showModifyModal} onHide={() => setShowModifyModal(false)}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Modify Company</Modal.Title>
+                <Modal.Title>Modify {selectedCompany ? selectedCompany.name : 'Company'}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>

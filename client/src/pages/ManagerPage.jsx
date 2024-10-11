@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux'; 
 import { Container, Row, Col } from 'react-bootstrap';
-import ManagerCompanyForm from '../components/Forms/ManagerCompanyForm';
-import AddCompanyForm from '../components/Forms/AddCompanyForm';
-import '../components/Forms/ManagerCompanyForm.css'; 
+import ManagerCompanyForm from '../components/Forms/Manager/ManagerCompanyForm';
+import AddCompanyForm from '../components/Forms/Manager/AddCompanyForm';
+import '../components/Forms/Manager/ManagerCompanyForm.css'; 
 
 
 

@@ -102,7 +102,7 @@ const AddCompanyForm = ({ onCompanyAdded, existingCompanies = [] }) => { // Defa
                             required
                         />
                     </Form.Group>
-
+                    <br></br>
                     <Button variant="success" type="submit">
                         Add Company
                     </Button>

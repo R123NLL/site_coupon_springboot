@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import FilterComponent from "../components/Filter/FilterComponent";
 import CouponList from "../components/Coupon/CouponList";
 import { Modal, Button } from 'react-bootstrap'; 
-import '../components/Forms/WelcomePageBackground.css'; 
+import '../components/Forms/Welcome/WelcomePageBackground.css'; 
 
 export default function WelcomePage() {
     const userId = useSelector(store => store.auth.id);
@@ -42,33 +42,36 @@ export default function WelcomePage() {
         }
     }
 
+    // Fetch coupons on load
     useEffect(() => {
         fetchData();
     }, []);
 
+    // Apply filter
     useEffect(() => {
-        if (Object.entries(filter).length === 0) {
-            setFilteredCoupons([...couponList]); 
-        } else {
-            const temp = couponList.filter(coupon => {
-                if (filter.filterBy === 'category') {
-                    return coupon.category.toLowerCase() === filter.filterValue.toLowerCase();
-                }
-                if (filter.filterBy === 'price') {
-                    return coupon.price <= filter.filterValue;
-                }
-                return true;
-            });
+        
+        // If filter object is empty
+        if(Object.entries(filter).length === 0){
+            setFilteredCoupons([...couponList]); // Use spred "..." to create new array
+        }
+
+        if(filter.filterBy === 'category'){
+            const temp = couponList.filter(coupon => coupon.category.toLowerCase() === filter.filterValue.toLowerCase());
             setFilteredCoupons(temp);
         }
-    }, [filter, couponList]);
+
+        if(filter.filterBy === 'price'){
+            const temp = couponList.filter(coupon => coupon.price <= filter.filterValue);
+            setFilteredCoupons(temp);
+        }
+    }, [filter])
 
     const handleClose = () => setShowThankYou(false); // Function to close the modal
 
     return (
         <div className="welcomePageBackground">
             <h1 className="text-center">Available Coupons</h1>
-            <FilterComponent setFilter={setFilter} />
+            <FilterComponent getFilter={setFilter} />
                 <CouponList 
                         coupons={filteredCoupons} 
                         onClickFunction={onClickFunction} 

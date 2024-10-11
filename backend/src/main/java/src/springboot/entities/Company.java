@@ -17,7 +17,6 @@ public class Company {
     @Column(name = "company_name", nullable = false, unique = true, length = 40)
     private String name;
     @Column(name = "company_email", nullable = false, unique = true, length = 40)
-    @JsonIgnore
     private String email;
     @Column(name = "company_password", nullable = false, length = 40)
     @JsonIgnore
@@ -38,6 +37,10 @@ public class Company {
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

@@ -6,6 +6,7 @@ import src.springboot.entities.Coupon;
 import java.util.Set;
 
 public class NewCompanyRequest {
+    private Long companyId;
     private String name;
     private String email;
     private String password;
@@ -15,11 +16,20 @@ public class NewCompanyRequest {
 
     }
 
-    public NewCompanyRequest(String name, String email, String password, Set<Coupon> coupons) {
+    public NewCompanyRequest(Long companyId, String name, String email, String password, Set<Coupon> coupons) {
+        this.companyId = companyId;
         this.name = name;
         this.email = email;
         this.password = password;
         this.coupons = coupons;
+    }
+
+    public Long getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(Long companyId) {
+        this.companyId = companyId;
     }
 
     public String getName() {
@@ -57,7 +67,8 @@ public class NewCompanyRequest {
     @Override
     public String toString() {
         return "NewCompanyRequest{" +
-                "name='" + name + '\'' +
+                "companyId=" + companyId +
+                ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", coupons=" + coupons +
