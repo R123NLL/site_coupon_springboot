@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import src.springboot.exceptions.InsufficientCouponsQuantityException;
 import src.springboot.repositories.CompanyRepository;
 import src.springboot.repositories.CouponRepository;
 import src.springboot.repositories.CustomerRepository;
@@ -29,6 +30,8 @@ public class CustomerServiceImpl extends ClientService implements CustomerServic
 
     @Autowired
     private CustomerRepository customerRepository;
+    @Autowired
+    private CouponRepository couponRepository;
 
     private Long customerID;
     private static final Logger logger = LoggerFactory.getLogger(CustomerServiceImpl.class);
@@ -64,16 +67,39 @@ public class CustomerServiceImpl extends ClientService implements CustomerServic
     }
 
     @Override
-    public void purchaseCoupon(Long customerId, Long couponId) throws UnAuthorizedException {
+    @Transactional
+    public void purchaseCoupon(Long customerId, Long couponId, int quantity) throws UnAuthorizedException {
         notLoggedIn(customerId);
-        Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
-        Coupon coupon = couponRepository.findById(couponId)
-                .orElseThrow(() -> new IllegalArgumentException("Coupon not found"));
 
-        customer.getCoupons().add(coupon); //adding the coupon to the customer's list
-        customerRepository.save(customer); //saving the updated customer
+        // Check if the customer exists
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new IllegalArgumentException("Customer not found with ID: " + customerId));
+
+        // Check if the coupon exists
+        Coupon coupon = couponRepository.findById(couponId)
+                .orElseThrow(() -> new IllegalArgumentException("Coupon not found with ID: " + couponId));
+
+        // Check if enough coupons are available for purchase
+        if (coupon.getAmount() < quantity) {
+            throw new InsufficientCouponsQuantityException("Not enough coupons available for coupon ID: " + couponId);
+        }
+
+        // Deduct the purchased quantity from the coupon's available amount
+        coupon.setAmount(coupon.getAmount() - quantity);
+
+        try {
+            // Save the updated coupon back to the repository
+            couponRepository.save(coupon);
+
+            //add the coupon to the customer and save the updated customer
+            customer.getCoupons().add(coupon);
+            customerRepository.save(customer);
+
+        } catch (Exception e) {
+            throw new RuntimeException("The purchase of the coupon failed due to a change at the same time: " + e.getMessage());
+        }
     }
+
 
     @Override
     @Transactional
