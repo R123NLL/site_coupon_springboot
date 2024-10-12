@@ -80,9 +80,12 @@ public class CustomerServiceImpl extends ClientService implements CustomerServic
         Coupon coupon = couponRepository.findById(couponId)
                 .orElseThrow(() -> new EntityNotFoundException("Coupon not found with ID: " + couponId));
 
+        // check if customer own this coupon
+        boolean isAlreadyPurchased = customer.getCoupons().stream().anyMatch(c -> Objects.equals(c.getId(), coupon.getId()));
+
         // Check if enough coupons are available for purchase
-        if (coupon.getAmount() < 1) {
-            throw new InsufficientCouponsQuantityException("Not enough coupons available for coupon ID: " + couponId);
+        if (coupon.getAmount() < 1 || isAlreadyPurchased) {
+            throw new InsufficientCouponsQuantityException("Customer own this coupon or not enough coupons available for coupon ID: " + couponId);
         }
 
         // Deduct the purchased quantity from the coupon's available amount

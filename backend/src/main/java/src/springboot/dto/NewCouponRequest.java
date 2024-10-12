@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 public class NewCouponRequest {
+    private Long couponId;
     private Long companyId;
     private Category category;
     private String title;
@@ -22,7 +23,8 @@ public class NewCouponRequest {
 
     }
 
-    public NewCouponRequest(Long companyId, Category category, String title, String description, LocalDate startDate, LocalDate endDate, int amount, double price, String image) {
+    public NewCouponRequest(Long couponId, Long companyId, Category category, String title, String description, LocalDate startDate, LocalDate endDate, int amount, double price, String image) {
+        this.couponId = couponId;
         this.companyId = companyId;
         this.category = category;
         this.title = title;
@@ -32,6 +34,14 @@ public class NewCouponRequest {
         this.amount = amount;
         this.price = price;
         this.image = image;
+    }
+
+    public Long getCouponId() {
+        return couponId;
+    }
+
+    public void setCouponId(Long couponId) {
+        this.couponId = couponId;
     }
 
     public Long getCompanyId() {
@@ -111,16 +121,27 @@ public class NewCouponRequest {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         NewCouponRequest that = (NewCouponRequest) o;
-        return amount == that.amount && Double.compare(price, that.price) == 0 && Objects.equals(companyId, that.companyId) && category == that.category && Objects.equals(title, that.title) && Objects.equals(description, that.description) && Objects.equals(startDate, that.startDate) && Objects.equals(endDate, that.endDate) && Objects.equals(image, that.image);
+        return amount == that.amount && Double.compare(price, that.price) == 0 && Objects.equals(couponId, that.couponId) && Objects.equals(companyId, that.companyId) && category == that.category && Objects.equals(title, that.title) && Objects.equals(description, that.description) && Objects.equals(startDate, that.startDate) && Objects.equals(endDate, that.endDate) && Objects.equals(image, that.image);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(companyId, category, title, description, startDate, endDate, amount, price, image);
+        return Objects.hash(couponId, companyId, category, title, description, startDate, endDate, amount, price, image);
     }
 
     @Override
     public String toString() {
-        return "NewCouponRequest{" + "companyId=" + companyId + ", category=" + category + ", title='" + title + '\'' + ", description='" + description + '\'' + ", startDate=" + startDate + ", endDate=" + endDate + ", amount=" + amount + ", price=" + price + ", image='" + image + '\'' + '}';
+        return "NewCouponRequest{" +
+                "couponId=" + couponId +
+                ", companyId=" + companyId +
+                ", category=" + category +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", amount=" + amount +
+                ", price=" + price +
+                ", image='" + image + '\'' +
+                '}';
     }
 }
