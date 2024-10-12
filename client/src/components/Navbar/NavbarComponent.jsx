@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { roles } from '../../shared/common';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { logout } from '../../state/auth/authSlice';
+import { logoutAction } from '../../state/commonActions';
 
 export default function NavbarComponent() {
 
@@ -47,7 +47,7 @@ export default function NavbarComponent() {
                     <Nav className="me-auto">
                         <Nav.Link onClick={() => {navigateTo("/")}}>Home</Nav.Link>
                         {dynamicItems}
-                        {isAuthenticated && <Nav.Link onClick={() => {dispatch(logout())}}>logout</Nav.Link>}
+                        {isAuthenticated && <Nav.Link onClick={() => {dispatch(logoutAction())}}>logout</Nav.Link>}
                         {!isAuthenticated && <Nav.Link onClick={() => {navigateTo("/login")}}>Login</Nav.Link>}
                         <Nav.Link onClick={() => {alert('Modal not implemented')}}>About</Nav.Link>
                     </Nav>

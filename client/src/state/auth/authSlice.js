@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit"
 import { jwtDecode } from "jwt-decode";
+import { LOGOUT_ACTION } from "../commonActions";
 
 const initialState = {
     isAuthenticated: false,
@@ -26,17 +27,13 @@ const authSlice = createSlice({
             } catch (error) {
                 console.error("Invalid token", error);
             }
-        },
-        logout: (state, action) => {
-            state.isAuthenticated = false;
-            state.role = null;
-            state.id = 0;
-            state.token = null;
-            state.exp = null;
         }
+    },
+    extraReducers: builder => {
+        builder.addCase(LOGOUT_ACTION, () => initialState);
     }
 });
 
-export const { setUser, logout } = authSlice.actions;
+export const { setUser } = authSlice.actions;
 
 export default authSlice.reducer;
