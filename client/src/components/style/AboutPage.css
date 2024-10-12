@@ -1,0 +1,34 @@
+.about-page {
+    text-align: center; /* Center-aligns all text within this div */
+    margin: 20px; /* Adds some margin around the page */
+}
+
+.title {
+    margin-bottom: 20px; /* Space below the title */
+    color: rgb(3, 97, 3); /* Change title color to black */
+    font-size: xx-large;
+}
+
+.aboutBackground {
+    background-image: url('https://wallpapers.com/images/hd/page-background-gb7xwx37yb4yyyal.jpg'); /* Background image */
+    background-size: cover; /* Make the image cover the whole container */
+    background-position: center; /* Center the image */
+    padding: 20px;
+    border-radius: 10px; /* Optional for rounded corners */
+    min-height: 100vh; /* Make it cover the full height */
+}
+
+.about-page p {
+    color: rgb(3, 27, 131); /* Change paragraph text color to black */
+    font-size: larger;
+    font-weight: bold;
+}
+
+.spinning-cat {
+    background-image: url('https://media.tenor.com/qJRMLPlR3_8AAAAi/maxwell-cat.gif'); /* Adjusted URL to direct GIF */
+    width: 200px; /* Set width for the GIF container */
+    height: 200px; /* Set height for the GIF container */
+    background-size: contain; /* Ensure the GIF fits within the container */
+    background-repeat: no-repeat; /* Prevent background repetition */
+    margin: 20px auto; /* Center the GIF in its parent */
+}
