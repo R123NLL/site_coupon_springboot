@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import src.springboot.exceptions.ActiveCouponsException;
 import src.springboot.repositories.CompanyRepository;
 import src.springboot.repositories.CouponRepository;
 import src.springboot.repositories.CustomerRepository;
@@ -76,7 +77,7 @@ public class CompanyServiceImpl extends ClientService implements CompanyService 
         boolean couponExists = couponRepository.existsByTitleAndCompanyId(coupon.getTitle(), company.getId());
 
         if (couponExists) {
-            throw new IllegalArgumentException("Coupon with title " + coupon.getTitle() +
+            throw new ActiveCouponsException("Coupon with title " + coupon.getTitle() +
                     " for companyId: " + company.getId() + " already exists");
         }
 
@@ -95,7 +96,7 @@ public class CompanyServiceImpl extends ClientService implements CompanyService 
 
         boolean couponExists = couponRepository.existsByTitleAndCompanyId(updatedCoupon.getTitle(), company.getId());
         if (couponExists && !existingCoupon.getTitle().equals(updatedCoupon.getTitle())) {
-            throw new IllegalArgumentException("Coupon with title " + updatedCoupon.getTitle() +
+            throw new ActiveCouponsException("Coupon with title " + updatedCoupon.getTitle() +
                     " for companyId: " + company.getId() + " already exists");
         }
 
@@ -135,7 +136,7 @@ public class CompanyServiceImpl extends ClientService implements CompanyService 
         List<Coupon> coupons = couponRepository.findByCompanyIdAndCategory(companyId, category);
 
         if (coupons.isEmpty()) {
-            System.out.println("No coupons found for companyId: " + companyId + " and category: " + category);
+            throw new ActiveCouponsException("No coupons found for companyId: " + companyId + " and category: " + category);
         }
 
         return coupons;
@@ -147,7 +148,7 @@ public class CompanyServiceImpl extends ClientService implements CompanyService 
         List<Coupon> coupons = couponRepository.findByCompanyIdAndPriceLessThanEqual(companyId, maxPrice);
 
         if (coupons.isEmpty()) {
-            System.out.println("No coupons found for companyId: " + companyId + " with max price of: " + maxPrice);
+            throw new ActiveCouponsException("No coupons found for companyId: " + companyId + " with max price of: " + maxPrice);
         }
 
         return coupons;

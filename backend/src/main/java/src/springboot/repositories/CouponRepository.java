@@ -10,6 +10,7 @@ import java.util.List;
 
 @Repository
 public interface CouponRepository extends JpaRepository<Coupon, Long> {
+    Long countByCompanyId(Long companyId);
 
     boolean existsByTitleAndCompanyId(String title, Long companyId);
 
@@ -25,6 +26,6 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
 
     List<Coupon> findByCustomersIdAndPriceLessThanEqual(Long customerId, double maxPrice);
 
-    List<Coupon>  findByStartDateLessThanEqualAndEndDateGreaterThanAndAmountGreaterThan(LocalDate currentDate, LocalDate currentDateAgain, int amount);
+    List<Coupon> findByStartDateLessThanEqualAndEndDateGreaterThanAndAmountGreaterThan(LocalDate currentDate, LocalDate currentDateAgain, int amount);
 
 }

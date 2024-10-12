@@ -31,4 +31,5 @@ public interface AdminService {
 
     List<Coupon> getAllActiveCoupons();
 
+    List<Coupon> getCompanyCoupons(Long companyId) throws UnAuthorizedException;
 }

@@ -7,6 +7,7 @@ import src.springboot.dto.NewCompanyRequest;
 import src.springboot.dto.NewCustomerRequest;
 import src.springboot.dto.NewLoginRequest;
 import src.springboot.entities.Company;
+import src.springboot.entities.Coupon;
 import src.springboot.entities.Customer;
 import src.springboot.exceptions.UnAuthorizedException;
 import src.springboot.mapper.Mapper;
@@ -63,6 +64,11 @@ public class AdminController extends ClientController {
     public Company getOneCompany(@PathVariable Long companyId) throws UnAuthorizedException {
 
         return adminService.getOneCompany(companyId);
+    }
+    @GetMapping("/companies/{id}/coupons")
+    public ResponseEntity<List<Coupon>> getActiveCouponsByCompany(@PathVariable Long id) throws UnAuthorizedException {
+        List<Coupon> activeCoupons = adminService.getCompanyCoupons(id);
+        return ResponseEntity.ok(activeCoupons);
     }
 
     @PostMapping("/customers")
