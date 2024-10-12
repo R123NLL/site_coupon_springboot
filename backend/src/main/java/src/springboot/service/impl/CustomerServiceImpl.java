@@ -68,7 +68,7 @@ public class CustomerServiceImpl extends ClientService implements CustomerServic
 
     @Override
     @Transactional
-    public void purchaseCoupon(Long customerId, Long couponId, int quantity) throws UnAuthorizedException {
+    public void purchaseCoupon(Long customerId, Long couponId) throws UnAuthorizedException {
         notLoggedIn(customerId);
 
         // Check if the customer exists
@@ -80,12 +80,12 @@ public class CustomerServiceImpl extends ClientService implements CustomerServic
                 .orElseThrow(() -> new IllegalArgumentException("Coupon not found with ID: " + couponId));
 
         // Check if enough coupons are available for purchase
-        if (coupon.getAmount() < quantity) {
+        if (coupon.getAmount() < 1) {
             throw new InsufficientCouponsQuantityException("Not enough coupons available for coupon ID: " + couponId);
         }
 
         // Deduct the purchased quantity from the coupon's available amount
-        coupon.setAmount(coupon.getAmount() - quantity);
+        coupon.setAmount(coupon.getAmount() - 1);
 
         try {
             // Save the updated coupon back to the repository
@@ -96,7 +96,7 @@ public class CustomerServiceImpl extends ClientService implements CustomerServic
             customerRepository.save(customer);
 
         } catch (Exception e) {
-            throw new RuntimeException("The purchase of the coupon failed due to a change at the same time: " + e.getMessage());
+            throw new InsufficientCouponsQuantityException("The purchase of the coupon failed due to a change at the same time: " + e.getMessage());
         }
     }
 
@@ -114,7 +114,14 @@ public class CustomerServiceImpl extends ClientService implements CustomerServic
             throw new IllegalArgumentException("Coupon not purchased by customer.");
         }
 
-        customerRepository.save(customer);
+        try {
+            customerRepository.save(customer);
+            coupon.setAmount(coupon.getAmount()+1);
+            couponRepository.save(coupon);
+        } catch (Exception ex) {
+            throw ex;
+        }
+
     }
 
     @Override
