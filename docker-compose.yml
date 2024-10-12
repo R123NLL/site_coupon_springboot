@@ -10,7 +10,8 @@ services:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
-      - ./backend/src/main/resources/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./backend/src/main/resources/01_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
+      - ./backend/src/main/resources/02_init.sql:/docker-entrypoint-initdb.d/02_init.sql
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "--silent" ]
       interval: 10s
@@ -36,7 +37,7 @@ services:
       context: client
       dockerfile: Dockerfile
     ports:
-      - "3000:80"
+      - "80:80"
     depends_on:
       - backend
 
