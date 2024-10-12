@@ -7,7 +7,8 @@ import { Modal, Button } from 'react-bootstrap';
 import { setPurchasedCoupons } from "../state/customer/customerSlice";
 import FilterComponent from "../components/Filter/FilterComponent";
 import CouponList from "../components/Coupon/CouponList";
-import '../components/Forms/WelcomePageBackground.css';
+import { Modal, Button } from 'react-bootstrap'; 
+import '../components/Forms/Welcome/WelcomePageBackground.css';
 
 export default function WelcomePage() {
     const userId = useSelector(store => store.auth.id);
@@ -48,10 +49,12 @@ export default function WelcomePage() {
             }).catch(error => console.error("Error purchasing coupon:", error));
     }
 
+    // Fetch coupons on load
     useEffect(() => {
         fetchData();
     }, [,purchasedCoupons]);
 
+    // Apply filter
     useEffect(() => {
         if (Object.entries(filter).length === 0) {
             setFilteredCoupons([...couponList]);

@@ -1,12 +1,16 @@
 package src.springboot.service.impl;
 
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import src.springboot.entities.Coupon;
+import src.springboot.exceptions.ActiveCouponsException;
 import src.springboot.repositories.CompanyRepository;
 import src.springboot.repositories.CouponRepository;
 import src.springboot.repositories.CustomerRepository;
@@ -57,12 +61,18 @@ public class AdminServiceImpl extends ClientService implements AdminService {
     public Company addCompany(Company company) throws UnAuthorizedException {
         notLoggedIn();
 
-        boolean companyExists = companyRepository.existsByEmailAndPassword(company.getEmail(),company.getPassword());
+        boolean companyExistsByName = companyRepository.existsByName(company.getName());
+        boolean companyExistsByEmail = companyRepository.existsByEmailAndPassword(company.getEmail(),company.getPassword());
 
-        if (companyExists) {
-            throw new IllegalArgumentException("Company with the name " + company.getName() +
-                    " is already exists");
+        if (companyExistsByName){
+            throw new DuplicateKeyException(company.getName()+" is already exists!");
         }
+
+        if (companyExistsByEmail) {
+            throw new DuplicateKeyException("The email :"+company.getEmail()+" is already registered try another!"
+                    );
+        }
+
         return companyRepository.save(company);
     }
 
@@ -73,23 +83,59 @@ public class AdminServiceImpl extends ClientService implements AdminService {
         Company existingCompany = companyRepository.findById(updatedCompany.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Company not found"));
 
-        existingCompany.setName(updatedCompany.getName());
-        existingCompany.setEmail(updatedCompany.getEmail());
-        existingCompany.setPassword(updatedCompany.getPassword());
-        existingCompany.setCoupons(updatedCompany.getCoupons());
+        // Check if name is taken by another company
+        if (updatedCompany.getName() != null && !updatedCompany.getName().isEmpty()) {
+            if (companyRepository.existsByName(updatedCompany.getName()) &&
+                    !existingCompany.getName().equals(updatedCompany.getName())) {
+                throw new DuplicateKeyException("Company name already exists");
+            }
+            existingCompany.setName(updatedCompany.getName());
+        }
+
+        // Check if email is taken by another company
+        if (updatedCompany.getEmail() != null && !updatedCompany.getEmail().isEmpty()) {
+            if (companyRepository.existsByEmail(updatedCompany.getEmail()) &&
+                    !existingCompany.getEmail().equals(updatedCompany.getEmail())) {
+                throw new DuplicateKeyException("Email already exists");
+            }
+            existingCompany.setEmail(updatedCompany.getEmail());
+        }
+
+        // Update password if provided
+        if (updatedCompany.getPassword() != null && !updatedCompany.getPassword().isEmpty()) {
+            existingCompany.setPassword(updatedCompany.getPassword());
+        }
+
+        // Update coupons if provided
+        if (updatedCompany.getCoupons() != null) {
+            existingCompany.getCoupons().clear();
+            existingCompany.getCoupons().addAll(updatedCompany.getCoupons());
+        }
 
         return companyRepository.save(existingCompany);
     }
 
+
+
     @Override
     @Transactional
     public void deleteCompany(Long companyId) throws UnAuthorizedException {
-        notLoggedIn();
+        notLoggedIn();  // Check if the user is logged in
 
+        // Check if the company exists
         if (!companyRepository.existsById(companyId)) {
             throw new EntityNotFoundException("Company with ID " + companyId + " not found");
         }
 
+        // Check if the company has active coupons
+        List<Coupon> activeCoupons = couponRepository.findByCompanyId(companyId);
+
+        if (!activeCoupons.isEmpty()) {
+            // Prompt the user for confirmation (throw an exception or return a message)
+            throw new ActiveCouponsException("This company has " + activeCoupons.size() + " active coupons. Are you sure you want to delete it?");
+        }
+
+        // If there are no active coupons or the user confirms, proceed to delete the company
         companyRepository.deleteById(companyId);
     }
 
@@ -108,12 +154,11 @@ public class AdminServiceImpl extends ClientService implements AdminService {
 
     @Override
     public Customer addCustomer(Customer customer) throws UnAuthorizedException {
-        notLoggedIn();
 
         boolean customerExists = customerRepository.existsCustomerByEmailAndPassword(customer.getEmail(), customer.getPassword());
 
         if (customerExists) {
-            throw new IllegalArgumentException("Customer with the email " + customer.getEmail() +
+            throw new EntityExistsException("Customer with the email " + customer.getEmail() +
                     " is already exists");
         }
 
@@ -163,6 +208,12 @@ public class AdminServiceImpl extends ClientService implements AdminService {
     public List<Coupon> getAllActiveCoupons(){
         LocalDate today = LocalDate.now();
         return couponRepository.findByStartDateLessThanEqualAndEndDateGreaterThanAndAmountGreaterThan(today,today,0);
+    }
+
+    @Override
+    public List<Coupon> getCompanyCoupons(Long companyId) throws UnAuthorizedException {
+        notLoggedIn();
+        return couponRepository.findByCompanyId(companyId);
     }
 
     private void notLoggedIn() throws UnAuthorizedException {

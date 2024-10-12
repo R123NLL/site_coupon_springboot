@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Container } from 'react-bootstrap';
 import axios from 'axios';
-import ModifyCouponModal from './Modal/ModifyCouponModal'; 
-import CouponTable from './Modal/CouponTable'; 
+import ModifyCouponModal from './Modal/ModifyCouponModal';
+import CouponTable from './Modal/CouponTable';
 
 const CompanyCouponForm = ({ companyId, companyName, coupons, setCoupons }) => {
     const [showModifyModal, setShowModifyModal] = useState(false);
@@ -29,7 +29,7 @@ const CompanyCouponForm = ({ companyId, companyName, coupons, setCoupons }) => {
     };
 
     const handleSaveChanges = () => {
-        const titleExists = coupons.some(coupon => 
+        const titleExists = coupons.some(coupon =>
             coupon.id !== selectedCoupon.id && coupon.title === updatedCouponData.title
         );
 
@@ -66,19 +66,19 @@ const CompanyCouponForm = ({ companyId, companyName, coupons, setCoupons }) => {
             <h1>{companyName}</h1>
             <br />
             <h2>Current Coupons</h2>
-            <CouponTable 
-                coupons={coupons} 
-                handleModify={handleModify} 
-                handleDelete={handleDelete} 
+            <CouponTable
+                coupons={coupons}
+                handleModify={handleModify}
+                handleDelete={handleDelete}
             />
 
-            <ModifyCouponModal 
-                show={showModifyModal} 
-                onHide={() => setShowModifyModal(false)} 
-                coupon={selectedCoupon} 
-                onSave={handleSaveChanges} 
-                updatedCouponData={updatedCouponData} 
-                setUpdatedCouponData={setUpdatedCouponData} 
+            <ModifyCouponModal
+                show={showModifyModal}
+                onHide={() => setShowModifyModal(false)}
+                coupon={selectedCoupon}
+                onSave={handleSaveChanges}
+                updatedCouponData={updatedCouponData}
+                setUpdatedCouponData={setUpdatedCouponData}
             />
         </Container>
     );

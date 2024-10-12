@@ -7,6 +7,7 @@ import src.springboot.dto.NewCompanyRequest;
 import src.springboot.dto.NewCustomerRequest;
 import src.springboot.dto.NewLoginRequest;
 import src.springboot.entities.Company;
+import src.springboot.entities.Coupon;
 import src.springboot.entities.Customer;
 import src.springboot.exceptions.UnAuthorizedException;
 import src.springboot.mapper.Mapper;
@@ -32,15 +33,20 @@ public class AdminController extends ClientController {
 
     @PostMapping("/companies")
     public Company addCompany(@RequestBody NewCompanyRequest newCompanyRequest) throws UnAuthorizedException {
-        Company company =  mapper.mapToCompany(newCompanyRequest);
+        Company company = mapper.mapToCompany(newCompanyRequest);
 
         return adminService.addCompany(company);
     }
 
     @PutMapping("/companies")
     public Company updateCompany(@RequestBody NewCompanyRequest newCompanyRequest) throws UnAuthorizedException {
+        // Map the request data to the Company object
         Company company = mapper.mapToCompany(newCompanyRequest);
 
+        // Extract companyId from NewCompanyRequest and set it on the company object
+        company.setId(newCompanyRequest.getCompanyId());
+
+        // Pass the company object to the service layer for update
         return adminService.updateCompany(company);
     }
 
@@ -58,6 +64,11 @@ public class AdminController extends ClientController {
     public Company getOneCompany(@PathVariable Long companyId) throws UnAuthorizedException {
 
         return adminService.getOneCompany(companyId);
+    }
+    @GetMapping("/companies/{id}/coupons")
+    public ResponseEntity<List<Coupon>> getActiveCouponsByCompany(@PathVariable Long id) throws UnAuthorizedException {
+        List<Coupon> activeCoupons = adminService.getCompanyCoupons(id);
+        return ResponseEntity.ok(activeCoupons);
     }
 
     @PostMapping("/customers")

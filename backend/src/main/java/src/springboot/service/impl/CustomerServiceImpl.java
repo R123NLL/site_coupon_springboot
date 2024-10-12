@@ -1,10 +1,12 @@
 package src.springboot.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import src.springboot.exceptions.CouponNotPurchasedException;
 import src.springboot.exceptions.InsufficientCouponsQuantityException;
 import src.springboot.repositories.CompanyRepository;
 import src.springboot.repositories.CouponRepository;
@@ -17,9 +19,8 @@ import src.springboot.service.ClientService;
 import src.springboot.service.CustomerService;
 
 
-import java.time.LocalDate;
+
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 
 import static java.util.Objects.nonNull;
@@ -73,11 +74,11 @@ public class CustomerServiceImpl extends ClientService implements CustomerServic
 
         // Check if the customer exists
         Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new IllegalArgumentException("Customer not found with ID: " + customerId));
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found with ID: " + customerId));
 
         // Check if the coupon exists
         Coupon coupon = couponRepository.findById(couponId)
-                .orElseThrow(() -> new IllegalArgumentException("Coupon not found with ID: " + couponId));
+                .orElseThrow(() -> new EntityNotFoundException("Coupon not found with ID: " + couponId));
 
         // check if customer own this coupon
         boolean isAlreadyPurchased = customer.getCoupons().stream().anyMatch(c -> Objects.equals(c.getId(), coupon.getId()));
@@ -109,20 +110,20 @@ public class CustomerServiceImpl extends ClientService implements CustomerServic
     public void removePurchasedCoupon(Long customerId, Long couponId) throws UnAuthorizedException {
         notLoggedIn(customerId);
         Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
         Coupon coupon = couponRepository.findById(couponId)
-                .orElseThrow(() -> new IllegalArgumentException("Coupon not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Coupon not found"));
 
         if (!customer.getCoupons().remove(coupon)) {
-            throw new IllegalArgumentException("Coupon not purchased by customer.");
+            throw new CouponNotPurchasedException("Coupon not purchased by customer.");
         }
 
         try {
             customerRepository.save(customer);
             coupon.setAmount(coupon.getAmount()+1);
             couponRepository.save(coupon);
-        } catch (Exception ex) {
-            throw ex;
+        } catch (Exception e) {
+            throw e;
         }
 
     }
@@ -150,7 +151,7 @@ public class CustomerServiceImpl extends ClientService implements CustomerServic
     public Customer getCustomerDetails(Long customerId) throws UnAuthorizedException {
         notLoggedIn(customerId);
         return customerRepository.findById(customerId)
-                .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
     }
 
     private void notLoggedIn(Long id) throws UnAuthorizedException {
