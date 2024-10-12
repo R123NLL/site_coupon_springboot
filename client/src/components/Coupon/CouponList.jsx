@@ -3,7 +3,7 @@ import CouponComponent from './CouponComponent';
 
 const CouponList = ({ coupons, onClickFunction, btnClass = "primary", btnText = "Buy Now" }) => { // Added props with default values
     return (
-        <div className="container d-flex justify-content-evenly flex-wrap">
+        <div className="container d-flex justify-content-start flex-wrap">
             {
                 coupons.map(c => (
                     <CouponComponent 
