@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./auth/authSlice";
+import customerReducer from "./customer/customerSlice";
 
 // TODO: need to figure out how to set up loaded state from storage for refresh
 const loadState = () => {
@@ -18,7 +19,8 @@ const persistedState = loadState();
 
 export const store = configureStore({
     reducer: {
-        auth: authReducer
+        auth: authReducer,
+        customer: customerReducer
     },
     persistedState
 });

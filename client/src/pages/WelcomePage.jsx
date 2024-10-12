@@ -1,54 +1,60 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom"; 
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { Modal, Button } from 'react-bootstrap';
+
+import { setPurchasedCoupons } from "../state/customer/customerSlice";
 import FilterComponent from "../components/Filter/FilterComponent";
 import CouponList from "../components/Coupon/CouponList";
-import { Modal, Button } from 'react-bootstrap'; 
-import '../components/Forms/WelcomePageBackground.css'; 
+import '../components/Forms/WelcomePageBackground.css';
 
 export default function WelcomePage() {
     const userId = useSelector(store => store.auth.id);
+    const purchasedCoupons = useSelector(store => store.customer.purchasedCoupons);
     const [couponList, setCouponList] = useState([]);
     const [filteredCoupons, setFilteredCoupons] = useState([]);
     const [filter, setFilter] = useState({});
-    const [showThankYou, setShowThankYou] = useState(false); 
-    const navigate = useNavigate(); 
+    const [showThankYou, setShowThankYou] = useState(false);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const fetchData = async () => {
         try {
             const apiUrl = process.env.REACT_APP_API_URL;
             const response = await axios.get(`${apiUrl}/coupons/active`);
-            setCouponList(response.data);
-            setFilteredCoupons(response.data);
+
+            // Remove coupons that already purchaced
+            const coupons = response.data.filter(
+                c => !purchasedCoupons.some(p => c.id === p.id));
+
+            setCouponList(coupons);
+            setFilteredCoupons(couponList);
         } catch (error) {
             console.error("Error fetching coupons:", error);
         }
     }
 
-    const onClickFunction = async (coupon) => { // Updated method name
+    const onClickFunction = (coupon) => { // Updated method name
         if (!userId) {
-            navigate("/login"); 
+            navigate("/login");
             return;
         }
-
-        try {
-            const apiUrl = process.env.REACT_APP_API_URL;
-            await axios.post(`${apiUrl}/api/v1/customers/${userId}/purchase/${coupon.id}`);
-            setShowThankYou(true); // Show the thank you modal on successful purchase
-            fetchData();
-        } catch (error) {
-            console.error("Error purchasing coupon:", error);
-        }
+        const apiUrl = process.env.REACT_APP_API_URL;
+        axios.post(`${apiUrl}/api/v1/customers/${userId}/purchase/${coupon.id}`)
+            .then(() => {
+                dispatch(setPurchasedCoupons([...purchasedCoupons, coupon]));
+                setShowThankYou(true); // Show the thank you modal on successful purchase
+            }).catch(error => console.error("Error purchasing coupon:", error));
     }
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [,purchasedCoupons]);
 
     useEffect(() => {
         if (Object.entries(filter).length === 0) {
-            setFilteredCoupons([...couponList]); 
+            setFilteredCoupons([...couponList]);
         } else {
             const temp = couponList.filter(coupon => {
                 if (filter.filterBy === 'category') {
@@ -69,12 +75,12 @@ export default function WelcomePage() {
         <div className="welcomePageBackground">
             <h1 className="text-center">Available Coupons</h1>
             <FilterComponent setFilter={setFilter} />
-                <CouponList 
-                        coupons={filteredCoupons} 
-                        onClickFunction={onClickFunction} 
-                        btnClass="success" 
-                        btnText="Purchase" 
-                />
+            <CouponList
+                coupons={filteredCoupons}
+                onClickFunction={onClickFunction}
+                btnClass="success"
+                btnText="Purchase"
+            />
 
             {/* Thank You Modal */}
             <Modal show={showThankYou} onHide={handleClose}>
