@@ -41,8 +41,18 @@ public class CompanyController extends ClientController{
 
     @PutMapping("/{companyId}/coupons")
     public Coupon updateCoupon(@PathVariable Long companyId, @RequestBody NewCouponRequest newCouponRequest) throws UnAuthorizedException {
+        newCouponRequest.setCompanyId(companyId);
+
+        // Map the request data to the Coupon object
         Coupon coupon = mapper.mapToCoupon(newCouponRequest);
+
+        // Extract couponId from NewCouponRequest and set it on the coupon object
+        coupon.setId(newCouponRequest.getCouponId()); // Make sure you have this method in NewCouponRequest
+
+        // Set the company for the coupon using the companyId from the path variable
         coupon.setCompany(companyService.getCompanyDetails(companyId));
+
+        // Pass the coupon object to the service layer for update
         return companyService.updateCoupon(coupon);
     }
 

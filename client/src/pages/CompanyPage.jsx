@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux'; 
-import AddCouponForm from '../components/Forms/AddCouponForm'; 
-import CompanyCouponForm from '../components/Forms/CompanyCouponForm'; 
+import AddCouponForm from '../components/Forms/Company/AddCouponForm'; 
+import CompanyCouponForm from '../components/Forms/Company/CompanyCouponForm'; 
 import { Table, Container, Row, Col } from 'react-bootstrap';
-import '../components/Forms/CompanyCouponForm.css'; 
+import '../components/Forms/Company/CompanyCouponForm.css'; 
 
 export default function CompanyPage() {
     const companyId = useSelector(store => store.auth.id); 

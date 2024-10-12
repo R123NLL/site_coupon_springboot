@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import src.springboot.repositories.CompanyRepository;
 import src.springboot.repositories.CouponRepository;
@@ -85,22 +86,28 @@ public class CompanyServiceImpl extends ClientService implements CompanyService 
 
     @Override
     public Coupon updateCoupon(Coupon updatedCoupon) throws UnAuthorizedException {
-        notLoggedIn(companyId);
+        notLoggedIn(companyId); // Ensure the user is logged in
 
+        // Retrieve the existing coupon from the database
         Coupon existingCoupon = couponRepository.findById(updatedCoupon.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Coupon not found"));
 
+        // Check if the company exists
         Company company = companyRepository.findById(updatedCoupon.getCompany().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Company not found"));
 
-        boolean couponExists = couponRepository.existsByTitleAndCompanyId(updatedCoupon.getTitle(), company.getId());
-        if (couponExists && !existingCoupon.getTitle().equals(updatedCoupon.getTitle())) {
-            throw new IllegalArgumentException("Coupon with title " + updatedCoupon.getTitle() +
-                    " for companyId: " + company.getId() + " already exists");
+        // Check if the title is taken by another coupon for the same company
+        if (updatedCoupon.getTitle() != null && !updatedCoupon.getTitle().isEmpty()) {
+            boolean couponExists = couponRepository.existsByTitleAndCompanyId(updatedCoupon.getTitle(), company.getId());
+            if (couponExists && !existingCoupon.getTitle().equals(updatedCoupon.getTitle())) {
+                throw new DuplicateKeyException("Coupon with title " + updatedCoupon.getTitle() +
+                        " for companyId: " + company.getId() + " already exists");
+            }
+            existingCoupon.setTitle(updatedCoupon.getTitle());
         }
 
+        // Update other fields
         existingCoupon.setCompany(company);
-        existingCoupon.setTitle(updatedCoupon.getTitle());
         existingCoupon.setDescription(updatedCoupon.getDescription());
         existingCoupon.setCategory(updatedCoupon.getCategory());
         existingCoupon.setStartDate(updatedCoupon.getStartDate());
@@ -109,9 +116,10 @@ public class CompanyServiceImpl extends ClientService implements CompanyService 
         existingCoupon.setPrice(updatedCoupon.getPrice());
         existingCoupon.setImage(updatedCoupon.getImage());
 
-
+        // Save the updated coupon back to the repository
         return couponRepository.save(existingCoupon);
     }
+
 
     public void deleteCoupon(Long companyId,Long couponId) throws UnAuthorizedException {
         notLoggedIn(companyId);
