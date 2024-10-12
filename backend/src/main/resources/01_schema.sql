@@ -1,3 +1,5 @@
+CREATE DATABASE IF NOT EXISTS `site_coupons_springboot`;
+
 -- Creating the customers table
 CREATE TABLE IF NOT EXISTS customers (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
