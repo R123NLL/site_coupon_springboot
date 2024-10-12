@@ -44,10 +44,10 @@ public class CustomerController extends ClientController {
         return customerService.getCustomerCoupons(customerId, maxPrice);
     }
 
-    @PostMapping("/{customerId}/purchase/{couponId}/{quantity}")
-    public ResponseEntity<String> purchaseCoupon(@PathVariable Long customerId, @PathVariable Long couponId, @PathVariable int quantity) {
+    @PostMapping("/{customerId}/purchase/{couponId}")
+    public ResponseEntity<String> purchaseCoupon(@PathVariable Long customerId, @PathVariable Long couponId) {
         try {
-            customerService.purchaseCoupon(customerId, couponId, quantity); // Pass quantity to service
+            customerService.purchaseCoupon(customerId, couponId);
             return ResponseEntity.ok("Coupons purchased successfully");
         } catch (UnAuthorizedException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Unauthorized: " + e.getMessage());
