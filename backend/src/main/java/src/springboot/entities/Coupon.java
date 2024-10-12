@@ -18,9 +18,9 @@ public class Coupon {
     private Company company;
     @Enumerated(EnumType.STRING)
     private Category category;
-    @Column(name = "title", nullable = false, length = 40)
+    @Column(name = "title", nullable = false, length = 250)
     private String title;
-    @Column(name = "description", nullable = false, length = 40)
+    @Column(name = "description", nullable = false, length = 250)
     private String description;
     @Column(name = "start_date", nullable = false, length = 40)
     private LocalDate startDate;
@@ -53,6 +53,8 @@ public class Coupon {
     public Long getId() {
         return id;
     }
+
+    public void setId(Long id){this.id=id;}
 
     public Company getCompany() {
         return company;

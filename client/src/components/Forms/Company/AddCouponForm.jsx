@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 import axios from 'axios';
-import useCouponInitialState from '../Coupon/CouponInitialState';
+import useCouponInitialState from '../../Coupon/CouponInitialState';
 
 const AddCouponForm = ({ companyId, onCouponAdded }) => {
     const { newCouponData, setNewCouponData } = useCouponInitialState();

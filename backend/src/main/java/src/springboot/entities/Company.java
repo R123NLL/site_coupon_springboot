@@ -17,10 +17,8 @@ public class Company {
     @Column(name = "company_name", nullable = false, unique = true, length = 40)
     private String name;
     @Column(name = "company_email", nullable = false, unique = true, length = 40)
-    @JsonIgnore
     private String email;
     @Column(name = "company_password", nullable = false, length = 40)
-    @JsonIgnore
     private String password;
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Coupon> coupons;
