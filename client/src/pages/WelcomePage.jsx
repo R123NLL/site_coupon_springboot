@@ -35,13 +35,13 @@ export default function WelcomePage() {
         }
     }
 
-    const onClickFunction = async (coupon) => { // Updated method name
+    const onClickFunction = (coupon) => { // Updated method name
         if (!userId) {
             navigate("/login");
             return;
         }
         const apiUrl = process.env.REACT_APP_API_URL;
-        await axios.post(`${apiUrl}/api/v1/customers/${userId}/purchase/${coupon.id}`)
+        axios.post(`${apiUrl}/api/v1/customers/${userId}/purchase/${coupon.id}`)
             .then(() => {
                 dispatch(setPurchasedCoupons([...purchasedCoupons, coupon]));
                 setShowThankYou(true); // Show the thank you modal on successful purchase
