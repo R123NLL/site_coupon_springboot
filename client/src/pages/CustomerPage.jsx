@@ -61,6 +61,7 @@ export default function CustomerPage() {
     return (
         <>
             <h1 className="text-center">Customer Page</h1>
+            {/* FilterComponent we provide set state function to GET FILTER */}
             <FilterComponent getFilter={setFilter} />
             <div className="container d-flex justify-content-evenly">
                 {
