@@ -83,7 +83,8 @@ export default function WelcomePage() {
     return (
         <div className="welcomePageBackground">
             <h1 className="text-center">Available Coupons</h1>
-            <FilterComponent setFilter={setFilter} />
+            {/* FilterComponent we provide set state function to GET FILTER */}
+            <FilterComponent getFilter={setFilter} />
             <CouponList
                 coupons={filteredCoupons}
                 onClickFunction={onClickFunction}
