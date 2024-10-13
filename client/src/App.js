@@ -1,6 +1,5 @@
 import { useSelector } from 'react-redux';
 import './App.css';
-import FooterComponent from './components/FooterComponent';
 import HeaderComponent from './components/HeaderComponent';
 import LoginComponent from './components/Login/LoginComponent';
 import '/node_modules/bootstrap/dist/css/bootstrap.min.css';
@@ -11,6 +10,7 @@ import WelcomePage from './pages/WelcomePage';
 import CustomerPage from './pages/CustomerPage';
 import CompanyPage from './pages/CompanyPage';
 import ManagerPage from './pages/ManagerPage';
+import AboutPage from './pages/AboutPage';
 
 function CheckRouteAccess({ children, role }) {
   const userRole = useSelector(store => store.auth.role);
@@ -29,6 +29,7 @@ function App() {
         <Routes>
           <Route path='/' element={< WelcomePage />} />
           <Route path='/login' element={<LoginComponent />} />
+          <Route path='/about' element={<AboutPage/>}/>
           <Route path='/customer' element={
             <CheckRouteAccess role={roles.customer}>
               < CustomerPage />

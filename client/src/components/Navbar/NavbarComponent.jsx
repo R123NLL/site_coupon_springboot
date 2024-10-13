@@ -49,7 +49,7 @@ export default function NavbarComponent() {
                         {dynamicItems}
                         {isAuthenticated && <Nav.Link onClick={() => {dispatch(logoutAction())}}>logout</Nav.Link>}
                         {!isAuthenticated && <Nav.Link onClick={() => {navigateTo("/login")}}>Login</Nav.Link>}
-                        <Nav.Link onClick={() => {alert('Modal not implemented')}}>About</Nav.Link>
+                        <Nav.Link onClick={() => {navigateTo("/about")}}>About</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Container>

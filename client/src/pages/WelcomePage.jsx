@@ -2,8 +2,6 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { Modal, Button } from 'react-bootstrap';
-
 import { setPurchasedCoupons } from "../state/customer/customerSlice";
 import FilterComponent from "../components/Filter/FilterComponent";
 import CouponList from "../components/Coupon/CouponList";
