@@ -1,3 +1,21 @@
+## Instractions for reviewer
+
+1) Ensure that you have docker installer, runing and working.
+2) Ensure that you have no images/containers/volumes from previous builds
+3) Enter into project folder and run command **"docker compose up -d"**
+4) Open Chrome browser and go to **http://localhost/**
+
+Customer for test: 
+    user: john.doe@example.com
+    password: password123
+
+Company for test: 
+    user: tech@corp.com
+    password: password123
+
+Administrator for test: 
+    user: admin@admin.com
+    password: admin
 
 ## How to work in team:
 
