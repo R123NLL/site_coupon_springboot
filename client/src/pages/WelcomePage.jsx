@@ -7,9 +7,11 @@ import FilterComponent from "../components/Filter/FilterComponent";
 import CouponList from "../components/Coupon/CouponList";
 import { Modal, Button } from 'react-bootstrap'; 
 import '../components/Forms/Welcome/WelcomePageBackground.css';
+import { roles } from "../shared/common";
 
 export default function WelcomePage() {
     const userId = useSelector(store => store.auth.id);
+    const userRole = useSelector(store => store.auth.role);
     const purchasedCoupons = useSelector(store => store.customer.purchasedCoupons);
     const [couponList, setCouponList] = useState([]);
     const [filteredCoupons, setFilteredCoupons] = useState([]);
@@ -39,6 +41,12 @@ export default function WelcomePage() {
             navigate("/login");
             return;
         }
+
+        if(userRole !== roles.customer){
+            alert('Sorry, coupons only for customers!!!');
+            return;
+        }
+
         const apiUrl = process.env.REACT_APP_API_URL;
         axios.post(`${apiUrl}/api/v1/customers/${userId}/purchase/${coupon.id}`)
             .then(() => {
